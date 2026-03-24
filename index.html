@@ -1599,56 +1599,56 @@ function escapeHtml(str) {
 
 const ALL_SKILLS = [
   // Ops
-  { name: '/daily-focus', cat: 'ops', desc: 'Morning focus + SVG metaphor \u2192 Telegram #focus. 4 MCP sources, ~15 seconds.' },
-  { name: '/pos-morning', cat: 'ops', desc: 'Full morning stack: calendar + tasks + sessions + vault \u2192 ONE focus sentence.' },
-  { name: '/vox', cat: 'ops', desc: 'Terminal day advisor. Fetches full context (focus, calendar, Linear, meetings) \u2192 actionable priorities.' },
-  { name: '/calendar', cat: 'ops', desc: 'Google Calendar events for today or week. Automatic fallback to macOS Calendar.app.' },
-  { name: '/linear-action', cat: 'ops', desc: 'Update, close, comment, reassign, create Linear tasks directly from terminal.' },
-  { name: '/focus', cat: 'ops', desc: 'Focus session coaching with real Focus Ship integration + Raycast Bridge.' },
-  { name: '/focus-ship-sprint', cat: 'ops', desc: 'Parallel work lanes via tmux. Solo or as agent team with independent lanes.' },
-  { name: '/remind', cat: 'ops', desc: 'Defer current session and create reminder for continuation. Format: /remind [time] [prompt].' },
+  { name: '/daily-focus', cat: 'ops', desc: 'Morning focus + SVG metaphor \u2192 Telegram #focus. 4 MCP sources, ~15 seconds.', mcp: 'Calendar, Linear, Telegram, Episodic Memory', layer: 'L4 Skills', flow: 'Calendar+Linear+Journal+Memory \u2192 focus sentence + SVG \u2192 Telegram' },
+  { name: '/pos-morning', cat: 'ops', desc: 'Full morning stack: calendar + tasks + sessions + vault \u2192 ONE focus sentence.', mcp: 'Calendar, Linear, Krisp, Filesystem', layer: 'L4 Skills', flow: 'auto-detect MCP \u2192 gather all sources \u2192 synthesize \u2192 one focus sentence' },
+  { name: '/vox', cat: 'ops', desc: 'Terminal day advisor. Fetches full context (focus, calendar, Linear, meetings) \u2192 actionable priorities.', mcp: 'Calendar, Linear, Krisp', layer: 'L4 Skills', flow: 'MC Server context \u2192 priorities \u2192 actionable advice' },
+  { name: '/calendar', cat: 'ops', desc: 'Google Calendar events for today or week. Automatic fallback to macOS Calendar.app.', mcp: 'Calendar', layer: 'L3 Orchestration', flow: 'Calendar MCP \u2192 events list \u2192 formatted schedule' },
+  { name: '/linear-action', cat: 'ops', desc: 'Update, close, comment, reassign, create Linear tasks directly from terminal.', mcp: 'Linear', layer: 'L3 Orchestration', flow: 'command + issue ID \u2192 Linear API \u2192 status update' },
+  { name: '/focus', cat: 'ops', desc: 'Focus session coaching with real Focus Ship integration + Raycast Bridge.', mcp: 'Filesystem', layer: 'L4 Skills', flow: 'timer start \u2192 Focus Ship \u2192 breathing + work blocks + results' },
+  { name: '/focus-ship-sprint', cat: 'ops', desc: 'Parallel work lanes via tmux. Solo or as agent team with independent lanes.', mcp: 'Filesystem', layer: 'L4 Skills', flow: 'plan \u2192 tmux split \u2192 parallel agents \u2192 merge results' },
+  { name: '/remind', cat: 'ops', desc: 'Defer current session and create reminder for continuation.', mcp: 'Filesystem', layer: 'L3 Orchestration', flow: 'current context \u2192 save state \u2192 schedule reminder' },
   // Content
-  { name: '/content-voice', cat: 'content', desc: '5 tones: partner, public, internal, gonzo, content. Human-sounding Russian text.' },
-  { name: '/reel-edit', cat: 'content', desc: 'Instagram Reels from raw video: transcribe, smart cut, overlay, JetBrains Mono subtitles, audio processing.' },
-  { name: '/reel-block-edit', cat: 'content', desc: 'Visual block editor for reels. HTML timeline, segment swap/reorder, labeled Whisper blocks.' },
-  { name: '/research', cat: 'content', desc: 'Deep parallel research via 5 Exa sub-agents. Presets: video, competitor, edtech, product, market.' },
-  { name: '/infocompressor', cat: 'content', desc: 'Compress text with 100% information preservation. Triggers: compress, cheat sheet, dense summary.' },
-  { name: '/intro', cat: 'content', desc: 'Generate intro messages for Telegram chats and communities. Adaptive format per channel context.' },
-  { name: '/ambient-advisor', cat: 'content', desc: 'Background Exa research on session topic. Auto-triggers on strategic/multi-step questions.' },
+  { name: '/content-voice', cat: 'content', desc: '5 tones: partner, public, internal, gonzo, content. Human-sounding Russian text.', mcp: 'Telegram', layer: 'L4 Skills', flow: 'input text \u2192 tone selection \u2192 rewrite \u2192 review' },
+  { name: '/reel-edit', cat: 'content', desc: 'Instagram Reels from raw video: transcribe, smart cut, overlay, JetBrains Mono subtitles, audio processing.', mcp: 'Filesystem', layer: 'L4 Skills', flow: 'raw video \u2192 Whisper transcribe \u2192 smart cuts \u2192 overlay+subs \u2192 ffmpeg render' },
+  { name: '/reel-block-edit', cat: 'content', desc: 'Visual block editor for reels. HTML timeline, segment swap/reorder, labeled Whisper blocks.', mcp: 'Filesystem, Playwright', layer: 'L4 Skills', flow: 'segments \u2192 HTML editor \u2192 drag reorder \u2192 export timeline \u2192 moviepy render' },
+  { name: '/research', cat: 'content', desc: 'Deep parallel research via 5 Exa sub-agents. Presets: video, competitor, edtech, product, market.', mcp: 'Exa Search, Episodic Memory', layer: 'L4 Skills', flow: 'topic \u2192 5\u00d7 Exa agents (parallel) \u2192 synthesis \u2192 research doc \u2192 vault' },
+  { name: '/infocompressor', cat: 'content', desc: 'Compress text with 100% information preservation. Triggers: compress, cheat sheet, dense summary.', mcp: '\u2014', layer: 'L4 Skills', flow: 'long text \u2192 structure extraction \u2192 zero-loss compression \u2192 cheat sheet' },
+  { name: '/intro', cat: 'content', desc: 'Generate intro messages for Telegram chats and communities. Adaptive format per channel context.', mcp: 'Telegram', layer: 'L4 Skills', flow: 'channel context \u2192 tone match \u2192 intro draft \u2192 send' },
+  { name: '/ambient-advisor', cat: 'content', desc: 'Background Exa research on session topic. Auto-triggers on strategic/multi-step questions.', mcp: 'Exa Search', layer: 'L3 Orchestration', flow: 'detect topic \u2192 background Sonnet agent \u2192 Exa search \u2192 results file' },
   // Design
-  { name: '/imagine', cat: 'design', desc: 'Image generation via OpenRouter API. Models: Nano Banana, GPT-5, Flux, Seedream, Riverflow.' },
-  { name: '/AIM-imagine', cat: 'design', desc: 'Generate images in AI Mindset Brand Bible style (Analogue Constructivism).' },
-  { name: '/AIM-cover-gen', cat: 'design', desc: 'Animated video covers for Zoom waiting rooms, call waiting screens, branded loading animations.' },
-  { name: '/visual-pipeline', cat: 'design', desc: 'Full creative pipeline: references \u2192 Design DNA \u2192 Design Code \u2192 artifacts (SVG, cards, presentations).' },
-  { name: '/style-bible', cat: 'design', desc: 'Analyze visual taste. Drop an image \u2192 get aesthetic DNA analysis + entry in Style Bible.' },
-  { name: '/excalidraw', cat: 'design', desc: 'Generate Excalidraw diagrams (kanban, ecosystem, mindmap, timeline, flowchart) \u2192 save to Obsidian.' },
-  { name: '/video-art', cat: 'design', desc: 'GPU shaders, face/hand tracking, sound reactive, projections. Idea \u2192 interactive art object.' },
+  { name: '/imagine', cat: 'design', desc: 'Image generation via OpenRouter API. Models: Nano Banana, GPT-5, Flux, Seedream, Riverflow.', mcp: 'Filesystem', layer: 'L4 Skills', flow: 'prompt \u2192 OpenRouter API \u2192 PNG/SVG \u2192 vault or Telegram' },
+  { name: '/AIM-imagine', cat: 'design', desc: 'Generate images in AI Mindset Brand Bible style (Analogue Constructivism).', mcp: 'Filesystem', layer: 'L4 Skills', flow: 'concept \u2192 brand bible rules \u2192 OpenRouter \u2192 branded image' },
+  { name: '/AIM-cover-gen', cat: 'design', desc: 'Animated video covers for Zoom waiting rooms, call waiting screens, branded loading animations.', mcp: 'Filesystem', layer: 'L4 Skills', flow: 'theme \u2192 HTML animation \u2192 MP4 render \u2192 cover file' },
+  { name: '/visual-pipeline', cat: 'design', desc: 'Full creative pipeline: references \u2192 Design DNA \u2192 Design Code \u2192 artifacts (SVG, cards, presentations).', mcp: 'Filesystem, Playwright', layer: 'L4 Skills', flow: 'references \u2192 DNA extraction \u2192 design tokens \u2192 artifact generation' },
+  { name: '/style-bible', cat: 'design', desc: 'Analyze visual taste. Drop an image \u2192 get aesthetic DNA analysis + entry in Style Bible.', mcp: 'Filesystem', layer: 'L2 Data', flow: 'image \u2192 aesthetic analysis \u2192 clustering \u2192 Style Bible entry' },
+  { name: '/excalidraw', cat: 'design', desc: 'Generate Excalidraw diagrams (kanban, ecosystem, mindmap, timeline, flowchart) \u2192 save to Obsidian.', mcp: 'Filesystem', layer: 'L4 Skills', flow: 'description \u2192 diagram type \u2192 Excalidraw JSON \u2192 vault file' },
+  { name: '/video-art', cat: 'design', desc: 'GPU shaders, face/hand tracking, sound reactive, projections. Idea \u2192 interactive art object.', mcp: 'Filesystem', layer: 'L4 Skills', flow: 'concept \u2192 WGSL/GLSL code \u2192 wgpu-py/ModernGL render \u2192 interactive' },
   // CRM/Team
-  { name: '/AIM-crm', cat: 'crm', desc: 'AI Mindset CRM: partners, offers, dashboard. Full partner lifecycle in terminal.' },
-  { name: '/AIM-curator', cat: 'crm', desc: 'Curator tracking: outreach, onboarding, activity dashboard for AI Mindset Labs.' },
-  { name: '/AIM-lab', cat: 'crm', desc: 'Lab hub: chat monitoring, participant replies, weekly digest, feedback collection, audience analysis.' },
-  { name: '/AIM-pm', cat: 'crm', desc: 'Team process manager: review, sync, summary, task tracking across AI Mindset team.' },
-  { name: '/AIM-weekly-sync', cat: 'crm', desc: 'Comprehensive syncs: weekly, product, marketing, partnerships, personal \u2014 all formats.' },
-  { name: '/AIM-content-voice', cat: 'crm', desc: 'Channel posts, announcements, gonzo series, Substack digests, partner follow-ups, promo content.' },
-  { name: '/telegram', cat: 'crm', desc: 'Send messages, photos, files to Telegram via MTProto (Telethon). Direct channel access.' },
-  { name: '/meeting-summary', cat: 'crm', desc: 'Transcript \u2192 enriched summary + action items split by responsible \u2192 Telegram.' },
+  { name: '/AIM-crm', cat: 'crm', desc: 'AI Mindset CRM: partners, offers, dashboard. Full partner lifecycle in terminal.', mcp: 'Notion, Telegram', layer: 'L5 People', flow: 'partner data \u2192 offer generation \u2192 Notion card \u2192 follow-up tracking' },
+  { name: '/AIM-curator', cat: 'crm', desc: 'Curator tracking: outreach, onboarding, activity dashboard for AI Mindset Labs.', mcp: 'Notion, Telegram', layer: 'L5 People', flow: 'candidate list \u2192 outreach template \u2192 onboarding flow \u2192 activity tracking' },
+  { name: '/AIM-lab', cat: 'crm', desc: 'Lab hub: chat monitoring, participant replies, weekly digest, feedback collection, audience analysis.', mcp: 'Telegram, Linear', layer: 'L5 People', flow: 'Telegram chat \u2192 monitor \u2192 digest \u2192 feedback report \u2192 audience insights' },
+  { name: '/AIM-pm', cat: 'crm', desc: 'Team process manager: review, sync, summary, task tracking across AI Mindset team.', mcp: 'Linear, Telegram', layer: 'L5 People', flow: 'Linear tasks \u2192 team review \u2192 sync doc \u2192 Telegram summary' },
+  { name: '/AIM-weekly-sync', cat: 'crm', desc: 'Comprehensive syncs: weekly, product, marketing, partnerships, personal \u2014 all formats.', mcp: 'Linear, Calendar, Telegram', layer: 'L5 People', flow: 'Linear+Calendar+TG \u2192 sync document \u2192 Telegram team chat' },
+  { name: '/AIM-content-voice', cat: 'crm', desc: 'Channel posts, announcements, gonzo series, Substack digests, partner follow-ups, promo content.', mcp: 'Telegram', layer: 'L4 Skills', flow: 'topic \u2192 format selection \u2192 draft \u2192 review \u2192 publish' },
+  { name: '/telegram', cat: 'crm', desc: 'Send messages, photos, files to Telegram via MTProto (Telethon). Direct channel access.', mcp: 'Telegram', layer: 'L3 Orchestration', flow: 'message + chat_id \u2192 MTProto \u2192 delivered' },
+  { name: '/meeting-summary', cat: 'crm', desc: 'Transcript \u2192 enriched summary + action items split by responsible \u2192 Telegram.', mcp: 'Krisp, Telegram, Filesystem', layer: 'L4 Skills', flow: 'transcript file \u2192 extract decisions + actions \u2192 split by person \u2192 save + send' },
   // Context
-  { name: '/context-compact', cat: 'context', desc: 'Handoff generation when context > 70%. Saves progress to files + generates continuation prompt.' },
-  { name: '/eval', cat: 'context', desc: 'Self-evaluation: binary T/R/C rubric. Text quality, rule adherence, code correctness.' },
-  { name: '/reflect', cat: 'context', desc: 'Periodic analysis of accumulated evals. Detect error patterns \u2192 generate CLAUDE.md rules.' },
-  { name: '/pos-audit', cat: 'context', desc: 'Scan POS infrastructure: CLAUDE.md, skills, MCP, memory, hooks, settings. Score 0-12.' },
-  { name: '/pos-dashboard-gen', cat: 'context', desc: 'Generate personal HTML dashboard from POS context. Terminal aesthetic, single-file.' },
-  { name: '/pos-mission-control', cat: 'context', desc: 'Unified workflow: audit infrastructure, map MCP channels, route pipelines (audit/morning/dashboard).' },
-  { name: '/pos-skill-factory', cat: 'context', desc: 'Create production-quality skills from description. 4 template patterns, quality validation.' },
-  { name: '/vault-cleanup', cat: 'context', desc: 'Scan Obsidian vault for bloat. Move junk to quarantine. Never deletes permanently.' },
-  { name: '/sessions', cat: 'context', desc: 'Show recent Claude Code sessions with descriptions. Period filter: today/week/month.' },
-  { name: '/history', cat: 'context', desc: 'Full Claude Code session history from ~/.claude/projects/ with metadata.' },
+  { name: '/context-compact', cat: 'context', desc: 'Handoff generation when context > 70%. Saves progress to files + generates continuation prompt.', mcp: 'Filesystem', layer: 'L6 Governance', flow: 'detect 70%+ \u2192 save progress \u2192 generate handoff block \u2192 next session prompt' },
+  { name: '/eval', cat: 'context', desc: 'Self-evaluation: binary T/R/C rubric. Text quality, rule adherence, code correctness.', mcp: 'Filesystem', layer: 'L6 Governance', flow: 'response \u2192 T/R/C assessment \u2192 pass/fail \u2192 log to evals/log.jsonl' },
+  { name: '/reflect', cat: 'context', desc: 'Periodic analysis of accumulated evals. Detect error patterns \u2192 generate CLAUDE.md rules.', mcp: 'Filesystem', layer: 'L6 Governance', flow: 'evals log \u2192 pattern detection \u2192 improvement rules \u2192 CLAUDE.md update proposal' },
+  { name: '/pos-audit', cat: 'context', desc: 'Scan POS infrastructure: CLAUDE.md, skills, MCP, memory, hooks, settings. Score 0-12.', mcp: 'Filesystem', layer: 'L6 Governance', flow: 'scan all POS files \u2192 score each pillar \u2192 gap analysis \u2192 recommendations' },
+  { name: '/pos-dashboard-gen', cat: 'context', desc: 'Generate personal HTML dashboard from POS context. Terminal aesthetic, single-file.', mcp: 'Filesystem, Linear, Calendar', layer: 'L4 Skills', flow: 'POS context \u2192 gather data \u2192 HTML template \u2192 dashboard.html' },
+  { name: '/pos-mission-control', cat: 'context', desc: 'Unified workflow: audit infrastructure, map MCP channels, route pipelines (audit/morning/dashboard).', mcp: 'all MCP servers', layer: 'L6 Governance', flow: 'audit \u2192 MCP map \u2192 route selection \u2192 pipeline execution \u2192 artifacts' },
+  { name: '/pos-skill-factory', cat: 'context', desc: 'Create production-quality skills from description. 4 template patterns, quality validation.', mcp: 'Filesystem', layer: 'L3 Orchestration', flow: 'description \u2192 template selection \u2192 skill generation \u2192 validation \u2192 install' },
+  { name: '/vault-cleanup', cat: 'context', desc: 'Scan Obsidian vault for bloat. Move junk to quarantine. Never deletes permanently.', mcp: 'Filesystem', layer: 'L2 Data', flow: 'scan vault \u2192 identify bloat \u2192 quarantine \u2192 report freed space' },
+  { name: '/sessions', cat: 'context', desc: 'Show recent Claude Code sessions with descriptions. Period filter: today/week/month.', mcp: 'Filesystem', layer: 'L2 Data', flow: 'read ~/.claude/projects/ \u2192 parse sessions \u2192 format list' },
+  { name: '/history', cat: 'context', desc: 'Full Claude Code session history from ~/.claude/projects/ with metadata.', mcp: 'Filesystem', layer: 'L2 Data', flow: 'scan project dirs \u2192 extract metadata \u2192 formatted history' },
   // Personal
-  { name: '/daily-metaphor', cat: 'personal', desc: 'Generate personalized SVG visual metaphor based on daily focus energy and theme.' },
-  { name: '/daily-story', cat: 'personal', desc: 'Visual day narrative: animated SVG metaphors forming a story of the day.' },
-  { name: '/undone', cat: 'personal', desc: 'Analyze undone items from messages, calendar, personal time windows. Manifesto of Not-Doing.' },
-  { name: '/ceo-council', cat: 'personal', desc: 'Parallel Opus sub-agents as isolated C-level experts. Strategic analysis from multiple perspectives.' },
-  { name: '/os-mind', cat: 'personal', desc: '1-minute attention practice using real tasks as prompts. Context router for micro-focus.' },
+  { name: '/daily-metaphor', cat: 'personal', desc: 'Generate personalized SVG visual metaphor based on daily focus energy and theme.', mcp: 'Filesystem', layer: 'L4 Skills', flow: 'focus text \u2192 theme extraction \u2192 SVG generation \u2192 vault + Telegram' },
+  { name: '/daily-story', cat: 'personal', desc: 'Visual day narrative: animated SVG metaphors forming a story of the day.', mcp: 'Filesystem', layer: 'L4 Skills', flow: 'day events \u2192 narrative arc \u2192 animated SVG sequence \u2192 vault' },
+  { name: '/undone', cat: 'personal', desc: 'Analyze undone items from messages, calendar, personal time windows. Manifesto of Not-Doing.', mcp: 'Calendar, Telegram', layer: 'L4 Skills', flow: 'messages + calendar + time \u2192 undone analysis \u2192 practices from Manifesto' },
+  { name: '/ceo-council', cat: 'personal', desc: 'Parallel Opus sub-agents as isolated C-level experts. Strategic analysis from multiple perspectives.', mcp: 'Exa Search', layer: 'L4 Skills', flow: 'question \u2192 3-5 parallel Opus agents \u2192 independent analyses \u2192 synthesis' },
+  { name: '/os-mind', cat: 'personal', desc: '1-minute attention practice using real tasks as prompts. Context router for micro-focus.', mcp: 'Linear, Calendar, Krisp', layer: 'L4 Skills', flow: 'real tasks \u2192 attention prompt \u2192 1-min exercise \u2192 refocus' },
 ];
 
 let currentSkillFilter = 'all';
@@ -1676,7 +1676,10 @@ function showSkillDetail(i) {
   const detail = document.getElementById('sd-detail');
   document.querySelectorAll('.sd-chip').forEach((c, idx) => c.classList.toggle('selected', ALL_SKILLS.indexOf(ALL_SKILLS.filter(sk => currentSkillFilter === 'all' || sk.cat === currentSkillFilter)[idx]) === i));
   detail.style.display = 'block';
-  detail.innerHTML = `<h4>${s.name}</h4><div class="sd-desc">${s.desc}</div><div class="sd-meta"><span>category: <strong>${s.cat}</strong></span><span>type: skill</span><span>runtime: Claude Code / CoWork</span></div>`;
+  const mcpHtml = s.mcp ? `<div style="margin-top:8px;padding-top:8px;border-top:1px solid var(--border)"><span style="color:var(--text3);font-size:10px;text-transform:uppercase;letter-spacing:1px">MCP:</span> <span style="color:var(--purple)">${s.mcp}</span></div>` : '';
+  const flowHtml = s.flow ? `<div style="margin-top:6px"><span style="color:var(--text3);font-size:10px;text-transform:uppercase;letter-spacing:1px">Flow:</span> <span style="color:var(--teal)">${s.flow}</span></div>` : '';
+  const layerHtml = s.layer ? `<span>layer: <strong style="color:var(--amber)">${s.layer}</strong></span>` : '';
+  detail.innerHTML = `<h4>${s.name}</h4><div class="sd-desc">${s.desc}</div>${mcpHtml}${flowHtml}<div class="sd-meta" style="margin-top:8px"><span>category: <strong>${s.cat}</strong></span>${layerHtml}<span>runtime: Claude Code / CoWork</span></div>`;
 }
 
 // ─── SETUP GUIDE ─────────────────────────────────────────────────────────────
