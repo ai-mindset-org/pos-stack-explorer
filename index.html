@@ -342,6 +342,15 @@ body{background:var(--bg);color:var(--text);font-family:var(--mono);line-height:
 
         <div class="pflow-label">Generation</div>
         <div class="pflow"><span class="pf-skill">/imagine</span><span class="pf-a">&rarr;</span><span class="pf-src">OpenRouter</span><span class="pf-a">&rarr;</span><span class="pf-out">PNG 2K</span><span class="pf-a">&rarr;</span><span class="pf-skill">/daily-metaphor</span><span class="pf-a">&rarr;</span><span class="pf-out">SVG</span><span class="pf-a">&rarr;</span><span class="pf-out">Telegram</span></div>
+
+        <div class="pflow-label">CRM</div>
+        <div class="pflow"><span class="pf-src">Krisp MCP</span><span class="pf-a">&rarr;</span><span class="pf-skill">/meeting-summary</span><span class="pf-a">&rarr;</span><span class="pf-out">Summary .md</span><span class="pf-a">&rarr;</span><span class="pf-skill">/AIM-crm</span><span class="pf-a">&rarr;</span><span class="pf-src">Notion MCP</span><span class="pf-a">&rarr;</span><span class="pf-out">Partner card</span></div>
+
+        <div class="pflow-label">Team Sync</div>
+        <div class="pflow"><span class="pf-skill">/AIM-weekly-sync</span><span class="pf-a">&rarr;</span><span class="pf-src">Linear</span><span class="pf-src">Calendar</span><span class="pf-src">Telegram</span><span class="pf-a">&rarr;</span><span class="pf-out">Sync doc</span><span class="pf-a">&rarr;</span><span class="pf-skill">/telegram</span><span class="pf-a">&rarr;</span><span class="pf-out">Team chat</span></div>
+
+        <div class="pflow-label">Reels</div>
+        <div class="pflow"><span class="pf-src">Raw video</span><span class="pf-a">&rarr;</span><span class="pf-skill">/reel-edit</span><span class="pf-a">&rarr;</span><span class="pf-out">Transcribe + cut</span><span class="pf-a">&rarr;</span><span class="pf-skill">/reel-block-edit</span><span class="pf-a">&rarr;</span><span class="pf-out">Timeline</span><span class="pf-a">&rarr;</span><span class="pf-out">MP4 + subtitles</span></div>
       </div>
 
       <div class="pipeline-grid" id="pipeline-grid"></div>
@@ -349,30 +358,30 @@ body{background:var(--bg);color:var(--text);font-family:var(--mono);line-height:
       <div class="pipeline-departments">
         <h4 style="font-size:12px;color:var(--text3);margin-bottom:12px;text-transform:uppercase;letter-spacing:1px">5 Departments &mdash; One Terminal</h4>
         <div class="dept-grid">
+          <div class="dept-card" style="border-color:rgba(229,165,75,.3)">
+            <div class="dept-icon" style="color:var(--amber)">O</div>
+            <div class="dept-name">Ops <span style="font-size:9px;color:var(--text3)">(8)</span></div>
+            <div class="dept-skills">daily-focus &middot; pos-morning &middot; vox &middot; calendar &middot; linear-action &middot; focus &middot; focus-ship-sprint &middot; remind</div>
+          </div>
+          <div class="dept-card" style="border-color:rgba(167,139,250,.3)">
+            <div class="dept-icon" style="color:var(--purple)">C</div>
+            <div class="dept-name">Content <span style="font-size:9px;color:var(--text3)">(7)</span></div>
+            <div class="dept-skills">content-voice &middot; reel-edit &middot; reel-block-edit &middot; research &middot; infocompressor &middot; intro &middot; ambient-advisor</div>
+          </div>
           <div class="dept-card" style="border-color:rgba(167,139,250,.3)">
             <div class="dept-icon" style="color:var(--purple)">D</div>
-            <div class="dept-name">Design</div>
-            <div class="dept-skills">og-covers &middot; carousels &middot; visual pipeline &middot; imagine &middot; style-bible</div>
-          </div>
-          <div class="dept-card" style="border-color:rgba(63,185,80,.3)">
-            <div class="dept-icon" style="color:var(--green)">C</div>
-            <div class="dept-name">Content</div>
-            <div class="dept-skills">content-voice &middot; reel-edit &middot; imagine &middot; research &middot; infocompressor</div>
-          </div>
-          <div class="dept-card" style="border-color:rgba(229,165,75,.3)">
-            <div class="dept-icon" style="color:var(--amber)">R</div>
-            <div class="dept-name">CRM</div>
-            <div class="dept-skills">AIM-crm &middot; AIM-curator &middot; intro &middot; telegram &middot; meeting-summary</div>
+            <div class="dept-name">Design <span style="font-size:9px;color:var(--text3)">(7)</span></div>
+            <div class="dept-skills">imagine &middot; AIM-imagine &middot; AIM-cover-gen &middot; visual-pipeline &middot; style-bible &middot; excalidraw &middot; video-art</div>
           </div>
           <div class="dept-card" style="border-color:rgba(59,130,246,.3)">
-            <div class="dept-icon" style="color:var(--blue)">O</div>
-            <div class="dept-name">Ops</div>
-            <div class="dept-skills">daily-focus &middot; pos-morning &middot; vox &middot; linear-action &middot; calendar</div>
+            <div class="dept-icon" style="color:var(--blue)">T</div>
+            <div class="dept-name">CRM/Team <span style="font-size:9px;color:var(--text3)">(8)</span></div>
+            <div class="dept-skills">AIM-crm &middot; AIM-curator &middot; AIM-lab &middot; AIM-pm &middot; AIM-weekly-sync &middot; telegram &middot; meeting-summary &middot; AIM-content-voice</div>
           </div>
           <div class="dept-card" style="border-color:rgba(248,81,73,.3)">
             <div class="dept-icon" style="color:var(--red)">X</div>
-            <div class="dept-name">Context</div>
-            <div class="dept-skills">CLAUDE.md &middot; memory/ &middot; evals &middot; context-compact &middot; linear-awareness</div>
+            <div class="dept-name">Context <span style="font-size:9px;color:var(--text3)">(10)</span></div>
+            <div class="dept-skills">context-compact &middot; eval &middot; reflect &middot; pos-audit &middot; pos-dashboard-gen &middot; pos-mission-control &middot; pos-skill-factory &middot; vault-cleanup &middot; sessions &middot; history</div>
           </div>
         </div>
       </div>
@@ -683,32 +692,72 @@ const LAYERS = [
     desc: 'Daily routines, research pipelines, content creation.',
     presets: ['intermediate','advanced','team'],
     components: [
-      { title: '/daily-focus', desc: 'Morning briefing: calendar + Linear tasks + priorities.', badge: 'daily', color: 'amber' },
-      { title: '/pos-morning', desc: 'Full morning stack check. Systems status + agenda.', badge: 'daily', color: 'amber' },
-      { title: '/calendar', desc: 'Events from Google Calendar. Schedule-aware responses.', badge: 'utility', color: 'green' },
-      { title: '/AIM-lab', desc: 'Sprint management for AI Mindset Labs cohorts.', badge: 'team', color: 'purple' },
-      { title: '/research', desc: 'Deep research with Exa search + sub-agents.', badge: 'research', color: 'blue' },
-      { title: '/vox', desc: 'Voice note processing and transcription.', badge: 'content', color: 'teal' },
-      { title: '/context-compact', desc: 'Handoff generation when context > 70%.', badge: 'system', color: 'red' },
-      { title: '/imagine', desc: 'Visual content generation and art direction.', badge: 'creative', color: 'purple' },
-      { title: '/eval', desc: 'Detailed self-evaluation. Binary T/R/C rubric.', badge: 'quality', color: 'teal' },
-      { title: '/content-voice', desc: '5 tones: partner, public, internal, gonzo, content.', badge: 'content', color: 'amber' },
-      { title: '/meeting-summary', desc: 'Transcript \u2192 structured summary + action items.', badge: 'pipeline', color: 'green' },
-      { title: '/linear-action', desc: 'Update, close, comment, reassign Linear tasks.', badge: 'pm', color: 'blue' },
-      { title: '/ambient-advisor', desc: 'Background research on session topic.', badge: 'bg', color: 'green' },
+      // OPS (8)
+      { title: '/daily-focus', desc: 'Morning focus + SVG metaphor \u2192 Telegram #focus.', badge: 'ops', color: 'amber' },
+      { title: '/pos-morning', desc: 'Full morning stack: calendar + tasks + sessions + vault.', badge: 'ops', color: 'amber' },
+      { title: '/vox', desc: 'Terminal day advisor. Full context \u2192 actionable priorities.', badge: 'ops', color: 'amber' },
+      { title: '/calendar', desc: 'Google Calendar events. Schedule-aware decisions.', badge: 'ops', color: 'green' },
+      { title: '/linear-action', desc: 'Update, close, comment, reassign Linear tasks from terminal.', badge: 'ops', color: 'blue' },
+      { title: '/focus', desc: 'Focus session coaching with Focus Ship integration.', badge: 'ops', color: 'green' },
+      { title: '/focus-ship-sprint', desc: 'Parallel work lanes via tmux. Solo or agent team.', badge: 'ops', color: 'green' },
+      { title: '/remind', desc: 'Defer current session. Create reminder for continuation.', badge: 'ops', color: 'teal' },
+      // CONTENT (7)
+      { title: '/content-voice', desc: '5 tones: partner, public, internal, gonzo, content.', badge: 'content', color: 'purple' },
+      { title: '/reel-edit', desc: 'Instagram Reels: transcribe, cut, overlay, subtitles, audio.', badge: 'content', color: 'purple' },
+      { title: '/reel-block-edit', desc: 'Visual block editor for reels. Timeline, segment swap.', badge: 'content', color: 'purple' },
+      { title: '/research', desc: 'Deep parallel research via 5 Exa sub-agents. 6 presets.', badge: 'content', color: 'blue' },
+      { title: '/infocompressor', desc: 'Compress text with 100% info preservation. Zero data loss.', badge: 'content', color: 'teal' },
+      { title: '/intro', desc: 'Intro messages for Telegram chats. Adaptive format.', badge: 'content', color: 'teal' },
+      { title: '/ambient-advisor', desc: 'Background Exa research on session topic. Auto-trigger.', badge: 'content', color: 'green' },
+      // DESIGN (7)
+      { title: '/imagine', desc: 'Image gen via OpenRouter (Nano Banana, GPT-5, Flux, Seedream).', badge: 'design', color: 'purple' },
+      { title: '/AIM-imagine', desc: 'Brand images in Analogue Constructivism style.', badge: 'design', color: 'purple' },
+      { title: '/AIM-cover-gen', desc: 'Animated video covers for Zoom, waiting rooms.', badge: 'design', color: 'purple' },
+      { title: '/visual-pipeline', desc: 'Full creative pipe: refs \u2192 DNA \u2192 Design Code \u2192 artifacts.', badge: 'design', color: 'purple' },
+      { title: '/style-bible', desc: 'Visual taste analysis. Image \u2192 aesthetic DNA \u2192 Style Bible.', badge: 'design', color: 'amber' },
+      { title: '/excalidraw', desc: 'Generate Excalidraw diagrams, save to Obsidian vault.', badge: 'design', color: 'teal' },
+      { title: '/video-art', desc: 'GPU shaders, tracking, projections. Idea \u2192 art object.', badge: 'design', color: 'red' },
+      // CRM & TEAM (8)
+      { title: '/AIM-crm', desc: 'Partners, offers, dashboard. Full CRM in terminal.', badge: 'crm', color: 'amber' },
+      { title: '/AIM-curator', desc: 'Curator outreach, onboarding, dashboard tracking.', badge: 'crm', color: 'amber' },
+      { title: '/AIM-lab', desc: 'Lab hub: chat monitor, participant replies, digest, feedback.', badge: 'team', color: 'blue' },
+      { title: '/AIM-pm', desc: 'Team process manager: review, sync, summary, track.', badge: 'team', color: 'blue' },
+      { title: '/AIM-weekly-sync', desc: 'Comprehensive syncs: weekly, product, marketing, personal.', badge: 'team', color: 'blue' },
+      { title: '/AIM-content-voice', desc: 'Channel posts, announcements, gonzo series, Substack.', badge: 'team', color: 'purple' },
+      { title: '/telegram', desc: 'Send messages, photos, files via MTProto (Telethon).', badge: 'crm', color: 'green' },
+      { title: '/meeting-summary', desc: 'Transcript \u2192 enriched summary + action items \u2192 Telegram.', badge: 'crm', color: 'green' },
+      // CONTEXT & SYSTEM (10)
+      { title: '/context-compact', desc: 'Handoff generation when context > 70%. Saves progress.', badge: 'context', color: 'red' },
+      { title: '/eval', desc: 'Self-evaluation: binary T/R/C rubric. Every response.', badge: 'context', color: 'teal' },
+      { title: '/reflect', desc: 'Periodic analysis of accumulated evals \u2192 CLAUDE.md rules.', badge: 'context', color: 'teal' },
+      { title: '/pos-audit', desc: 'Scan POS infra: CLAUDE.md, skills, MCP, memory (0-12 score).', badge: 'context', color: 'amber' },
+      { title: '/pos-dashboard-gen', desc: 'Generate personal HTML dashboard from POS context.', badge: 'context', color: 'green' },
+      { title: '/pos-mission-control', desc: 'Unified control: audit, morning, dashboard, handoff.', badge: 'context', color: 'green' },
+      { title: '/pos-skill-factory', desc: 'Create production skills from description. 4 templates.', badge: 'context', color: 'blue' },
+      { title: '/vault-cleanup', desc: 'Scan Obsidian for bloat. Move junk to quarantine.', badge: 'context', color: 'red' },
+      { title: '/sessions', desc: 'Recent Claude Code sessions with descriptions.', badge: 'context', color: 'teal' },
+      { title: '/history', desc: 'Full session history from ~/.claude/projects/.', badge: 'context', color: 'teal' },
+      // PERSONAL (5)
+      { title: '/daily-metaphor', desc: 'Visual SVG metaphor based on daily focus.', badge: 'personal', color: 'amber' },
+      { title: '/daily-story', desc: 'Visual day narrative with animated SVG metaphors.', badge: 'personal', color: 'amber' },
+      { title: '/undone', desc: 'Analyze undone items from messages, calendar, time windows.', badge: 'personal', color: 'red' },
+      { title: '/ceo-council', desc: 'Parallel Opus sub-agents as C-level expert panel.', badge: 'personal', color: 'purple' },
+      { title: '/os-mind', desc: '1-min attention practice using real tasks as prompts.', badge: 'personal', color: 'green' },
     ],
     diagram: {
-      title: 'Morning Workflow',
+      title: '50+ Skills \u2192 5 Departments',
       nodes: [
-        { text: '/pos-morning', hl: true },
-        { text: '\u2192', arrow: true },
-        { text: '/calendar', hl: false },
+        { text: 'OPS (8)', hl: true },
         { text: '+', arrow: true },
-        { text: '/daily-focus', hl: false },
+        { text: 'Content (7)', hl: false },
         { text: '+', arrow: true },
-        { text: 'Linear tasks', hl: false },
-        { text: '\u2192', arrow: true },
-        { text: 'Prioritized day plan', hl: true },
+        { text: 'Design (7)', hl: false },
+        { text: '+', arrow: true },
+        { text: 'CRM/Team (8)', hl: false },
+        { text: '+', arrow: true },
+        { text: 'Context (10)', hl: false },
+        { text: '+', arrow: true },
+        { text: 'Personal (5)', hl: true },
       ]
     },
     example: {
