@@ -1,0 +1,1422 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Personal Operating System – Stack Explorer</title>
+<meta property="og:title" content="POS Stack Explorer — AI Mindset">
+<meta property="og:description" content="Interactive explorer of Personal Operating System stack for AI-Native Organizations Sprint">
+<meta property="og:type" content="website">
+<meta property="og:url" content="https://ai-mindset-org.github.io/pos-stack-explorer/">
+<meta name="twitter:card" content="summary_large_image">
+<style>
+*,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
+:root{
+  --bg:#0d1117;--bg2:#161b22;--bg3:#1c2333;--bg4:#21262d;
+  --border:#30363d;--border2:#484f58;
+  --text:#e6edf3;--text2:#8b949e;--text3:#6e7681;
+  --teal:#4dc9d4;--teal2:#2ea8b3;--teal-bg:rgba(77,201,212,.08);
+  --blue:#3b82f6;--amber:#e5a54b;--red:#f85149;--green:#3fb950;--purple:#a371f7;
+  --mono:"SF Mono","JetBrains Mono","Fira Code","Cascadia Code",monospace;
+  --sans:"Inter","SF Pro Display",-apple-system,system-ui,sans-serif;
+  --radius:8px;--transition:all .25s ease;
+}
+html{font-size:14px;scroll-behavior:smooth}
+body{background:var(--bg);color:var(--text);font-family:var(--mono);line-height:1.6;min-height:100vh;overflow-x:hidden}
+
+/* Terminal Chrome */
+.terminal-window{background:var(--bg2);border:1px solid var(--border);border-radius:10px;overflow:hidden;margin:12px;box-shadow:0 8px 32px rgba(0,0,0,.4)}
+.terminal-bar{display:flex;align-items:center;gap:8px;padding:10px 16px;background:var(--bg4);border-bottom:1px solid var(--border)}
+.terminal-dot{width:12px;height:12px;border-radius:50%}
+.terminal-dot.r{background:#ff5f57}.terminal-dot.y{background:#febc2e}.terminal-dot.g{background:#28c840}
+.terminal-title{flex:1;text-align:center;color:var(--text2);font-size:12px;font-family:var(--mono)}
+.terminal-body{padding:0}
+
+/* Header */
+.header{padding:32px 32px 24px;border-bottom:1px solid var(--border)}
+.header-top{display:flex;align-items:center;justify-content:space-between;flex-wrap:wrap;gap:16px;margin-bottom:16px}
+.header h1{font-size:24px;font-weight:700;color:var(--text);letter-spacing:-.5px}
+.header h1 span{color:var(--teal)}
+.header-badge{display:flex;align-items:center;gap:8px;font-size:11px;color:var(--text2);background:var(--bg);padding:6px 12px;border-radius:20px;border:1px solid var(--border)}
+.header-badge .dot{width:8px;height:8px;border-radius:50%;background:var(--green);animation:pulse 2s infinite}
+@keyframes pulse{0%,100%{opacity:1}50%{opacity:.4}}
+.header-sub{font-size:13px;color:var(--text2);max-width:700px}
+.header-sub strong{color:var(--teal)}
+
+/* Presets Bar */
+.presets{display:flex;gap:8px;padding:16px 32px;border-bottom:1px solid var(--border);flex-wrap:wrap;align-items:center}
+.presets-label{font-size:11px;color:var(--text3);text-transform:uppercase;letter-spacing:1px;margin-right:8px}
+.preset-btn{background:var(--bg);border:1px solid var(--border);color:var(--text2);padding:6px 14px;border-radius:20px;cursor:pointer;font-family:var(--mono);font-size:12px;transition:var(--transition)}
+.preset-btn:hover{border-color:var(--teal);color:var(--teal)}
+.preset-btn.active{background:var(--teal-bg);border-color:var(--teal);color:var(--teal)}
+
+/* Main Layout */
+.main{display:grid;grid-template-columns:280px 1fr;min-height:600px}
+@media(max-width:900px){.main{grid-template-columns:1fr}}
+
+/* Sidebar */
+.sidebar{border-right:1px solid var(--border);padding:16px 0}
+.layer-item{display:flex;align-items:center;gap:12px;padding:12px 24px;cursor:pointer;transition:var(--transition);border-left:3px solid transparent;position:relative}
+.layer-item:hover{background:var(--bg3)}
+.layer-item.active{background:var(--teal-bg);border-left-color:var(--teal)}
+.layer-icon{width:36px;height:36px;border-radius:var(--radius);display:flex;align-items:center;justify-content:center;font-size:16px;flex-shrink:0;border:1px solid var(--border)}
+.layer-item.active .layer-icon{border-color:var(--teal);box-shadow:0 0 12px rgba(77,201,212,.2)}
+.layer-label{font-size:13px;color:var(--text2);font-weight:500}
+.layer-item.active .layer-label{color:var(--text)}
+.layer-num{font-size:10px;color:var(--text3);position:absolute;right:16px;top:50%;transform:translateY(-50%)}
+.layer-item.active .layer-num{color:var(--teal)}
+.layer-item.locked{opacity:.35;cursor:default}
+.layer-item.locked:hover{background:transparent}
+.lock-icon{font-size:10px;color:var(--text3)}
+
+/* Content Area */
+.content{padding:24px 32px;overflow-y:auto;max-height:calc(100vh - 260px)}
+.content-header{margin-bottom:24px}
+.content-header h2{font-size:20px;font-weight:600;margin-bottom:6px;display:flex;align-items:center;gap:10px}
+.content-header h2 .tag{font-size:11px;padding:3px 10px;border-radius:12px;font-weight:500}
+.content-header p{font-size:13px;color:var(--text2);max-width:600px}
+
+/* Component Cards */
+.components-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(200px,1fr));gap:12px;margin-bottom:24px}
+.comp-card{background:var(--bg);border:1px solid var(--border);border-radius:var(--radius);padding:16px;cursor:default;transition:var(--transition);position:relative;overflow:hidden}
+.comp-card::before{content:'';position:absolute;top:0;left:0;right:0;height:2px;background:var(--teal);opacity:0;transition:var(--transition)}
+.comp-card:hover{border-color:var(--border2);transform:translateY(-1px)}
+.comp-card:hover::before{opacity:1}
+.comp-card-title{font-size:13px;font-weight:600;margin-bottom:4px;display:flex;align-items:center;gap:6px}
+.comp-card-desc{font-size:11px;color:var(--text2);line-height:1.5}
+.comp-badge{font-size:9px;padding:2px 6px;border-radius:8px;font-weight:500}
+
+/* Connection Diagram */
+.diagram{background:var(--bg);border:1px solid var(--border);border-radius:var(--radius);padding:20px;margin-bottom:24px;position:relative;min-height:120px}
+.diagram-title{font-size:11px;color:var(--text3);text-transform:uppercase;letter-spacing:1px;margin-bottom:16px}
+.diagram-flow{display:flex;align-items:center;gap:8px;flex-wrap:wrap}
+.diagram-node{background:var(--bg2);border:1px solid var(--border);border-radius:6px;padding:8px 14px;font-size:12px;color:var(--text2);white-space:nowrap}
+.diagram-node.highlight{border-color:var(--teal);color:var(--teal);background:var(--teal-bg)}
+.diagram-arrow{color:var(--text3);font-size:14px}
+.diagram-group{display:flex;flex-direction:column;gap:6px;padding:12px;border:1px dashed var(--border);border-radius:var(--radius)}
+.diagram-group-label{font-size:10px;color:var(--text3);text-transform:uppercase;letter-spacing:1px}
+
+/* Real Example Block */
+.example-block{background:var(--bg);border:1px solid var(--border);border-radius:var(--radius);overflow:hidden;margin-bottom:24px}
+.example-header{padding:10px 16px;background:var(--bg4);border-bottom:1px solid var(--border);display:flex;align-items:center;gap:8px}
+.example-header .file-icon{color:var(--teal);font-size:12px}
+.example-header .file-name{font-size:12px;color:var(--text2)}
+.example-body{padding:16px;font-size:12px;line-height:1.7;color:var(--text2);white-space:pre-wrap;font-family:var(--mono)}
+.example-body .hl{color:var(--teal)}
+.example-body .hl-amber{color:var(--amber)}
+.example-body .hl-green{color:var(--green)}
+.example-body .hl-purple{color:var(--purple)}
+.example-body .hl-blue{color:var(--blue)}
+.example-body .comment{color:var(--text3)}
+
+/* Concepts Section */
+.concepts{padding:16px 32px 24px;border-top:1px solid var(--border)}
+.concepts h3{font-size:14px;color:var(--text2);margin-bottom:16px;display:flex;align-items:center;gap:8px}
+.concepts-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(260px,1fr));gap:12px}
+.concept-card{background:var(--bg);border:1px solid var(--border);border-radius:var(--radius);padding:16px;cursor:pointer;transition:var(--transition)}
+.concept-card:hover{border-color:var(--teal);background:var(--teal-bg)}
+.concept-card.expanded{border-color:var(--teal);background:var(--teal-bg)}
+.concept-quote{font-size:12px;color:var(--amber);margin-bottom:8px;font-style:italic}
+.concept-title{font-size:13px;font-weight:600;margin-bottom:4px}
+.concept-mapping{font-size:11px;color:var(--text2);line-height:1.6;display:none}
+.concept-card.expanded .concept-mapping{display:block;margin-top:8px;padding-top:8px;border-top:1px solid var(--border)}
+.concept-slide-ref{font-size:10px;color:var(--text3);margin-top:4px}
+
+/* Prompt Output */
+.prompt-section{padding:16px 32px 24px;border-top:1px solid var(--border)}
+.prompt-section h3{font-size:14px;color:var(--text2);margin-bottom:12px;display:flex;align-items:center;gap:8px}
+.prompt-output{background:var(--bg);border:1px solid var(--border);border-radius:var(--radius);padding:20px;font-size:12px;line-height:1.7;color:var(--text2);white-space:pre-wrap;position:relative;max-height:300px;overflow-y:auto}
+.prompt-output .prompt-kw{color:var(--teal)}
+.copy-btn{position:absolute;top:12px;right:12px;background:var(--bg2);border:1px solid var(--border);color:var(--text2);padding:6px 12px;border-radius:6px;cursor:pointer;font-family:var(--mono);font-size:11px;transition:var(--transition)}
+.copy-btn:hover{border-color:var(--teal);color:var(--teal)}
+
+/* Footer */
+.footer{padding:16px 32px;border-top:1px solid var(--border);display:flex;justify-content:space-between;align-items:center;flex-wrap:wrap;gap:8px}
+.footer-left{font-size:11px;color:var(--text3)}
+.footer-right{display:flex;gap:16px}
+.footer-stat{font-size:11px;color:var(--text3);display:flex;align-items:center;gap:4px}
+.footer-stat .val{color:var(--teal)}
+
+/* Animations */
+.fade-in{animation:fadeIn .3s ease}
+@keyframes fadeIn{from{opacity:0;transform:translateY(8px)}to{opacity:1;transform:translateY(0)}}
+
+/* Scrollbar */
+::-webkit-scrollbar{width:6px}
+::-webkit-scrollbar-track{background:var(--bg2)}
+::-webkit-scrollbar-thumb{background:var(--border);border-radius:3px}
+::-webkit-scrollbar-thumb:hover{background:var(--border2)}
+
+/* Mobile */
+@media(max-width:900px){
+  .sidebar{border-right:none;border-bottom:1px solid var(--border);padding:8px 0;display:flex;overflow-x:auto;gap:0}
+  .layer-item{padding:10px 16px;border-left:none;border-bottom:3px solid transparent;white-space:nowrap;flex-direction:column;gap:4px}
+  .layer-item.active{border-bottom-color:var(--teal);border-left-color:transparent}
+  .layer-num{display:none}
+  .content{max-height:none;padding:16px}
+  .components-grid{grid-template-columns:1fr}
+  .concepts-grid{grid-template-columns:1fr}
+  .header,.presets,.concepts,.prompt-section,.footer,.naming-section,.node-graph-section,.l01-concepts-section,.deeplinks-section{padding-left:16px;padding-right:16px}
+}
+
+/* Status indicators */
+.status-row{display:flex;gap:6px;align-items:center;margin-top:8px}
+.status-dot{width:8px;height:8px;border-radius:50%}
+.status-dot.ok{background:var(--green)}.status-dot.warn{background:var(--amber)}.status-dot.crit{background:var(--red)}
+.status-label{font-size:10px;color:var(--text3)}
+
+/* Layer color coding */
+.lc-infra{color:#3fb950}.lc-data{color:#58a6ff}.lc-orch{color:#a371f7}.lc-skills{color:#e5a54b}.lc-people{color:#f778ba}.lc-gov{color:#4dc9d4}
+.bg-infra{background:rgba(63,185,80,.1);border-color:rgba(63,185,80,.3)}
+.bg-data{background:rgba(88,166,255,.1);border-color:rgba(88,166,255,.3)}
+.bg-orch{background:rgba(163,113,247,.1);border-color:rgba(163,113,247,.3)}
+.bg-skills{background:rgba(229,165,75,.1);border-color:rgba(229,165,75,.3)}
+.bg-people{background:rgba(247,120,186,.1);border-color:rgba(247,120,186,.3)}
+.bg-gov{background:rgba(77,201,212,.1);border-color:rgba(77,201,212,.3)}
+
+/* ── L01 Concepts Section ── */
+.l01-concepts-section{padding:16px 32px 24px;border-top:1px solid var(--border)}
+.l01-concepts-section h3{font-size:14px;color:var(--text2);margin-bottom:16px;display:flex;align-items:center;gap:8px}
+.l01-card{background:var(--bg);border:1px solid var(--border);border-radius:var(--radius);padding:16px;cursor:pointer;transition:var(--transition)}
+.l01-card:hover{border-color:var(--amber);background:rgba(229,165,75,.05)}
+.l01-card.expanded{border-color:var(--amber);background:rgba(229,165,75,.05)}
+.l01-slide{font-size:10px;color:var(--text3);display:inline-block;padding:2px 8px;border:1px solid var(--border);border-radius:10px;margin-bottom:8px}
+.l01-card-title{font-size:13px;font-weight:600;margin-bottom:4px;color:var(--text)}
+.l01-card-quote{font-size:12px;color:var(--amber);font-style:italic;margin-bottom:6px}
+.l01-card-body{font-size:11px;color:var(--text2);line-height:1.6;display:none}
+.l01-card.expanded .l01-card-body{display:block;margin-top:10px;padding-top:10px;border-top:1px solid var(--border)}
+.l01-card-link{font-size:11px;color:var(--teal);margin-top:6px;display:block;text-decoration:none}
+.l01-card-link:hover{text-decoration:underline}
+
+/* ── Node Graph ── */
+.node-graph-section{padding:16px 32px 24px;border-top:1px solid var(--border)}
+.node-graph-section h3{font-size:14px;color:var(--text2);margin-bottom:16px;display:flex;align-items:center;gap:8px}
+.node-graph-container{background:var(--bg);border:1px solid var(--border);border-radius:var(--radius);position:relative;overflow:hidden}
+.node-graph-canvas{width:100%;height:420px;display:block}
+.node-graph-legend{display:flex;gap:16px;padding:12px 16px;border-top:1px solid var(--border);flex-wrap:wrap}
+.legend-item{display:flex;align-items:center;gap:6px;font-size:11px;color:var(--text2)}
+.legend-dot{width:10px;height:10px;border-radius:50%}
+.node-graph-controls{position:absolute;top:12px;right:12px;display:flex;gap:6px}
+.graph-btn{background:var(--bg2);border:1px solid var(--border);color:var(--text2);padding:4px 10px;border-radius:4px;cursor:pointer;font-family:var(--mono);font-size:11px;transition:var(--transition)}
+.graph-btn:hover{border-color:var(--teal);color:var(--teal)}
+.graph-btn.active{background:var(--teal-bg);border-color:var(--teal);color:var(--teal)}
+
+/* ── Naming Convention Section ── */
+.naming-section{padding:16px 32px 24px;border-top:1px solid var(--border)}
+.naming-section h3{font-size:14px;color:var(--text2);margin-bottom:16px;display:flex;align-items:center;gap:8px}
+.naming-input-row{display:flex;gap:12px;align-items:flex-end;flex-wrap:wrap;margin-bottom:16px}
+.naming-field{display:flex;flex-direction:column;gap:4px}
+.naming-field label{font-size:10px;color:var(--text3);text-transform:uppercase;letter-spacing:1px}
+.naming-field input,.naming-field select{background:var(--bg);border:1px solid var(--border);color:var(--text);padding:8px 12px;border-radius:6px;font-family:var(--mono);font-size:12px;transition:var(--transition);outline:none}
+.naming-field input:focus,.naming-field select:focus{border-color:var(--teal);box-shadow:0 0 0 2px rgba(77,201,212,.15)}
+.naming-field input{min-width:200px}
+.naming-field select{min-width:140px;cursor:pointer}
+.naming-output{background:var(--bg);border:1px solid var(--border);border-radius:var(--radius);padding:16px;font-size:14px;color:var(--teal);font-family:var(--mono);letter-spacing:.3px;min-height:48px;display:flex;align-items:center;gap:12px;transition:var(--transition)}
+.naming-output .naming-result{flex:1}
+.naming-output .naming-copy{background:var(--bg2);border:1px solid var(--border);color:var(--text2);padding:4px 10px;border-radius:4px;cursor:pointer;font-family:var(--mono);font-size:11px;transition:var(--transition);flex-shrink:0}
+.naming-output .naming-copy:hover{border-color:var(--teal);color:var(--teal)}
+.naming-examples{display:grid;grid-template-columns:repeat(auto-fill,minmax(280px,1fr));gap:8px;margin-top:12px}
+.naming-example{font-size:11px;color:var(--text2);padding:8px 12px;background:var(--bg);border:1px solid var(--border);border-radius:6px;cursor:pointer;transition:var(--transition)}
+.naming-example:hover{border-color:var(--teal);color:var(--teal)}
+.naming-links{display:flex;gap:12px;margin-top:16px;flex-wrap:wrap}
+.naming-links a{font-size:11px;color:var(--teal);text-decoration:none;padding:6px 14px;border:1px solid var(--border);border-radius:20px;transition:var(--transition);display:flex;align-items:center;gap:6px}
+.naming-links a:hover{border-color:var(--teal);background:var(--teal-bg)}
+
+/* ── Deeplinks Section ── */
+.deeplinks-section{padding:16px 32px 24px;border-top:1px solid var(--border)}
+.deeplinks-section h3{font-size:14px;color:var(--text2);margin-bottom:16px;display:flex;align-items:center;gap:8px}
+.deeplinks-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(260px,1fr));gap:12px}
+.deeplink-card{background:var(--bg);border:1px solid var(--border);border-radius:var(--radius);padding:16px;transition:var(--transition)}
+.deeplink-card:hover{border-color:var(--teal);background:var(--teal-bg)}
+.deeplink-card a{color:var(--teal);text-decoration:none;font-size:12px;font-weight:600;display:block;margin-bottom:6px}
+.deeplink-card a:hover{text-decoration:underline}
+.deeplink-card p{font-size:11px;color:var(--text2);line-height:1.5}
+.deeplink-card .deeplink-url{font-size:10px;color:var(--text3);word-break:break-all;margin-top:6px;font-family:var(--mono)}
+</style>
+</head>
+<body>
+
+<div class="terminal-window">
+  <div class="terminal-bar">
+    <div class="terminal-dot r"></div>
+    <div class="terminal-dot y"></div>
+    <div class="terminal-dot g"></div>
+    <div class="terminal-title">pos-stack-explorer ~ Alex Povaliaev &mdash; AI-Native Sprint Day 2</div>
+  </div>
+  <div class="terminal-body">
+
+    <!-- Header -->
+    <div class="header">
+      <div class="header-top">
+        <h1><span>&gt;</span> Personal Operating System <span>|</span> Stack Explorer</h1>
+        <div class="header-badge">
+          <div class="dot"></div>
+          <span>L02 &middot; AI-Native Sprint &middot; 211 participants</span>
+        </div>
+      </div>
+      <p class="header-sub">
+        Interactive explorer of a <strong>production POS</strong> running on Claude Code + Obsidian.
+        Click layers to explore. Pick a preset to see what matters at each stage.
+        Yesterday Stepan showed <strong>why</strong> &mdash; today we look at <strong>how</strong>.
+      </p>
+    </div>
+
+    <!-- Presets -->
+    <div class="presets">
+      <span class="presets-label">Preset</span>
+      <button class="preset-btn" data-preset="beginner" onclick="setPreset('beginner')">Beginner</button>
+      <button class="preset-btn" data-preset="intermediate" onclick="setPreset('intermediate')">Intermediate</button>
+      <button class="preset-btn active" data-preset="advanced" onclick="setPreset('advanced')">Advanced</button>
+      <button class="preset-btn" data-preset="team" onclick="setPreset('team')">Team Bridge</button>
+    </div>
+
+    <!-- Main -->
+    <div class="main">
+
+      <!-- Sidebar -->
+      <div class="sidebar" id="sidebar"></div>
+
+      <!-- Content -->
+      <div class="content" id="content">
+        <div style="display:flex;align-items:center;justify-content:center;height:300px;color:var(--text3);font-size:13px">
+          &larr; Select a layer to explore
+        </div>
+      </div>
+    </div>
+
+    <!-- L01 Concepts (expandable cards from Stepan's lecture) -->
+    <div class="l01-concepts-section" id="l01-section">
+      <h3><span style="color:var(--amber)">#</span> L01 Concepts &mdash; Stepan's Lecture &rarr; POS Mapping</h3>
+      <div class="concepts-grid" id="l01-concepts-grid"></div>
+    </div>
+
+    <!-- Node Graph: Skills <-> MCP connections -->
+    <div class="node-graph-section" id="node-graph-section">
+      <h3><span style="color:var(--purple)">&diamond;</span> Skills &harr; MCP Connection Map</h3>
+      <div class="node-graph-container">
+        <div class="node-graph-controls">
+          <button class="graph-btn active" onclick="setGraphMode('all')">All</button>
+          <button class="graph-btn" onclick="setGraphMode('skills')">Skills only</button>
+          <button class="graph-btn" onclick="setGraphMode('mcp')">MCP only</button>
+        </div>
+        <canvas class="node-graph-canvas" id="nodeGraphCanvas"></canvas>
+        <div class="node-graph-legend">
+          <div class="legend-item"><div class="legend-dot" style="background:var(--amber)"></div> Skills</div>
+          <div class="legend-item"><div class="legend-dot" style="background:var(--purple)"></div> MCP Servers</div>
+          <div class="legend-item"><div class="legend-dot" style="background:var(--teal)"></div> Core (Claude Code)</div>
+          <div class="legend-item"><div class="legend-dot" style="background:var(--blue)"></div> Data (Vault/Memory)</div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Naming Convention interactive -->
+    <div class="naming-section" id="naming-section">
+      <h3><span style="color:var(--amber)">&lowast;</span> Naming Convention &mdash; Interactive Formatter</h3>
+      <div class="naming-input-row">
+        <div class="naming-field">
+          <label>Project</label>
+          <select id="naming-project" onchange="updateNaming()">
+            <option value="{AIM}">{AIM}</option>
+            <option value="{personal}">{personal}</option>
+            <option value="{CybOS}">{CybOS}</option>
+            <option value="{sprint}">{sprint}</option>
+            <option value="{ai-native}">{ai-native}</option>
+          </select>
+        </div>
+        <div class="naming-field">
+          <label>Type</label>
+          <select id="naming-type" onchange="updateNaming()">
+            <option value="{research}">{research}</option>
+            <option value="{analysis}">{analysis}</option>
+            <option value="{rule}">{rule}</option>
+            <option value="{prd}">{prd}</option>
+            <option value="{guide}">{guide}</option>
+            <option value="{note}">{note}</option>
+            <option value="{meeting}">{meeting}</option>
+            <option value="{transcript}">{transcript}</option>
+            <option value="{message}">{message}</option>
+            <option value="{overview}">{overview}</option>
+            <option value="{draft}">{draft}</option>
+            <option value="{skill}">{skill}</option>
+            <option value="{tool}">{tool}</option>
+            <option value="{prompt}">{prompt}</option>
+          </select>
+        </div>
+        <div class="naming-field">
+          <label>Description</label>
+          <input type="text" id="naming-desc" placeholder="type your file description..." oninput="updateNaming()">
+        </div>
+      </div>
+      <div class="naming-output" id="naming-output">
+        <span class="naming-result" id="naming-result">{AIM} {research} your description &ndash; 2026-03-24.md</span>
+        <button class="naming-copy" onclick="copyNaming()">copy</button>
+      </div>
+      <div class="naming-examples">
+        <div class="naming-example" onclick="fillNaming('{AIM}','{analysis}','AI-Native Sprint Audience')">{AIM} {analysis} AI-Native Sprint Audience &ndash; 2026-03-24.md</div>
+        <div class="naming-example" onclick="fillNaming('{personal}','{note}','morning reflection')">{personal} {note} morning reflection &ndash; 2026-03-24.md</div>
+        <div class="naming-example" onclick="fillNaming('{AIM}','{rule}','Communication Style')">{AIM} {rule} Communication Style &ndash; 2026-03-24.md</div>
+        <div class="naming-example" onclick="fillNaming('{sprint}','{meeting}','POS Setup Workshop')">{sprint} {meeting} POS Setup Workshop &ndash; 2026-03-24.md</div>
+      </div>
+      <div class="naming-links">
+        <a href="https://pos-pipelines.netlify.app/naming.html" target="_blank">&nearr; Naming Convention Tool (pos-pipelines)</a>
+        <a href="https://keyboard.aimindset.org" target="_blank">&nearr; keyboard.aimindset.org</a>
+      </div>
+    </div>
+
+    <!-- Concepts (original section) -->
+    <div class="concepts">
+      <h3><span style="color:var(--amber)">#</span> Core Concepts &rarr; POS Mapping</h3>
+      <div class="concepts-grid" id="concepts-grid"></div>
+    </div>
+
+    <!-- Prompt Output -->
+    <div class="prompt-section">
+      <h3><span style="color:var(--teal)">&gt;_</span> Your Starter Prompt</h3>
+      <div class="prompt-output" id="prompt-output"></div>
+    </div>
+
+    <!-- Deeplinks Section -->
+    <div class="deeplinks-section" id="deeplinks-section">
+      <h3><span style="color:var(--blue)">&sect;</span> Deeplinks &mdash; Presentation &amp; Resources</h3>
+      <div class="deeplinks-grid" id="deeplinks-grid">
+        <div class="deeplink-card">
+          <a href="https://ai-mindset-org.github.io/ainative-deck/pos-setup.html" target="_blank">POS Setup Deck</a>
+          <p>Presentation slides for the POS Setup workshop. Deeplink to specific slides with #N anchors.</p>
+          <div class="deeplink-url">ai-mindset-org.github.io/ainative-deck/pos-setup.html</div>
+        </div>
+        <div class="deeplink-card">
+          <a href="#l01-section">L01 Concepts</a>
+          <p>Stepan's L01 lecture key concepts mapped to POS components. Expandable cards with slide references.</p>
+          <div class="deeplink-url">#l01-section</div>
+        </div>
+        <div class="deeplink-card">
+          <a href="#node-graph-section">Skills &harr; MCP Graph</a>
+          <p>Interactive node graph showing how skills connect to MCP servers and data sources.</p>
+          <div class="deeplink-url">#node-graph-section</div>
+        </div>
+        <div class="deeplink-card">
+          <a href="#naming-section">Naming Convention</a>
+          <p>Interactive file naming formatter. Type a description, get a properly formatted filename.</p>
+          <div class="deeplink-url">#naming-section</div>
+        </div>
+        <div class="deeplink-card">
+          <a href="https://keyboard.aimindset.org" target="_blank">keyboard.aimindset.org</a>
+          <p>AI keyboard shortcuts and input optimization. Reduce friction to zero for faster experimentation.</p>
+          <div class="deeplink-url">keyboard.aimindset.org</div>
+        </div>
+        <div class="deeplink-card">
+          <a href="https://pos-pipelines.netlify.app/naming.html" target="_blank">Naming Tool (pos-pipelines)</a>
+          <p>Full naming convention reference and interactive tool. Live formatter with all project codes and types.</p>
+          <div class="deeplink-url">pos-pipelines.netlify.app/naming.html</div>
+        </div>
+        <div class="deeplink-card">
+          <a href="https://ai-mindset-org.github.io/ainative-deck/pos-setup.html#1" target="_blank">Slide #1 &mdash; Intro</a>
+          <p>Opening slide. Link to L01, narrative bridge from yesterday.</p>
+          <div class="deeplink-url">pos-setup.html#1</div>
+        </div>
+        <div class="deeplink-card">
+          <a href="https://ai-mindset-org.github.io/ainative-deck/pos-setup.html#5" target="_blank">Slide #5 &mdash; Claude Code Setup</a>
+          <p>Installation steps, first skill, CLAUDE.md creation.</p>
+          <div class="deeplink-url">pos-setup.html#5</div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Footer -->
+    <div class="footer">
+      <div class="footer-left">pos-stack-explorer v2.0 &middot; 2026-03-24 &middot; AI-Native Organizations Sprint</div>
+      <div class="footer-right">
+        <div class="footer-stat">layers: <span class="val" id="f-layers">6</span></div>
+        <div class="footer-stat">components: <span class="val" id="f-components">0</span></div>
+        <div class="footer-stat">preset: <span class="val" id="f-preset">advanced</span></div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<script>
+// ─── DATA ───────────────────────────────────────────────────────────────────
+
+const LAYERS = [
+  {
+    id: 'infra',
+    icon: '\u2393',
+    label: 'Infrastructure',
+    color: 'infra',
+    desc: 'The foundation: model, runtime, terminal environment.',
+    presets: ['beginner','intermediate','advanced','team'],
+    components: [
+      { title: 'Claude Code', desc: 'CLI agent runtime. npm install, not native.', badge: 'runtime', color: 'green' },
+      { title: 'Opus 4.6', desc: '1M context window. Holds entire codebase + vault context.', badge: 'model', color: 'teal' },
+      { title: 'iTerm2 + cmux', desc: 'Terminal multiplexer. Multiple agents in split panes.', badge: 'terminal', color: 'blue' },
+      { title: 'npm ecosystem', desc: '/opt/homebrew/bin/claude. Updatable, no Cloudflare blocks.', badge: 'pkg', color: 'text3' },
+    ],
+    diagram: {
+      title: 'Runtime Stack',
+      nodes: [
+        { text: 'Terminal (iTerm2)', hl: false },
+        { text: '\u2192' , arrow: true },
+        { text: 'Claude Code CLI', hl: true },
+        { text: '\u2192', arrow: true },
+        { text: 'Opus 4.6 (1M ctx)', hl: true },
+        { text: '\u2192', arrow: true },
+        { text: 'Your files', hl: false },
+      ]
+    },
+    example: {
+      file: '~/.zshrc',
+      body: [
+        { text: '# Claude Code \u2014 npm installation\n', cls: 'comment' },
+        { text: 'export PATH="/opt/homebrew/bin:$PATH"\n', cls: '' },
+        { text: '\n# Quick aliases\n', cls: 'comment' },
+        { text: 'alias cc="claude"\n', cls: '' },
+        { text: 'alias ccu="npm update -g @anthropic-ai/claude-code"\n', cls: '' },
+        { text: '\n# Version check\n', cls: 'comment' },
+        { text: '$ claude --version\n', cls: 'hl' },
+        { text: 'claude-code 1.0.33 (claude-opus-4-6)\n', cls: 'hl-green' },
+      ]
+    }
+  },
+  {
+    id: 'data',
+    icon: '\u25A6',
+    label: 'Data & Context',
+    color: 'data',
+    desc: 'Persistent memory layer: vault, rules, naming conventions.',
+    presets: ['beginner','intermediate','advanced','team'],
+    components: [
+      { title: 'Obsidian Vault', desc: '15,000+ notes. Single source of truth for everything.', badge: '15K+ notes', color: 'blue' },
+      { title: 'CLAUDE.md', desc: 'Project-level instructions. Claude reads on every session.', badge: 'critical', color: 'red' },
+      { title: 'memory/', desc: 'Auto-memory across sessions. Patterns, learnings, state.', badge: 'persistent', color: 'green' },
+      { title: 'Naming Convention', desc: '{project} {type} desc \u2013 YYYY-MM-DD.md', badge: 'standard', color: 'amber' },
+      { title: 'AGENTS.md', desc: 'Index file for AI agents navigating the vault.', badge: 'index', color: 'purple' },
+      { title: 'Episodic Memory', desc: 'MCP plugin. Cross-session search over past interactions.', badge: 'mcp', color: 'teal' },
+    ],
+    diagram: {
+      title: 'Context Hierarchy',
+      nodes: [
+        { text: '~/.claude/CLAUDE.md', hl: true },
+        { text: '\u2192', arrow: true },
+        { text: 'project/CLAUDE.md', hl: true },
+        { text: '\u2192', arrow: true },
+        { text: 'memory/', hl: false },
+        { text: '+', arrow: true },
+        { text: 'episodic-memory', hl: false },
+        { text: '\u2192', arrow: true },
+        { text: '\u2728 Full context', hl: true },
+      ]
+    },
+    example: {
+      file: 'CLAUDE.md (excerpt)',
+      body: [
+        { text: '# Naming Convention\n', cls: 'hl' },
+        { text: '{project} {type} description \u2013 {YYYY-MM-DD}.md\n\n', cls: 'hl-amber' },
+        { text: '# Examples:\n', cls: 'comment' },
+        { text: '{AIM} {research} BOS Speaker Analysis \u2013 2026-03-20.md\n', cls: '' },
+        { text: '{AIM} {rule} Communication Style \u2013 2026-01-15.md\n', cls: '' },
+        { text: '{AIM} {prd} Linear Awareness Layer \u2013 2026-02-19.md\n\n', cls: '' },
+        { text: '# Date ALWAYS at the end. No interface suffix.\n', cls: 'comment' },
+        { text: '# \u26a0 NEVER: "... \u2013 2026-03-20 \u2013 Claude Code.md"\n', cls: 'comment' },
+      ]
+    }
+  },
+  {
+    id: 'orch',
+    icon: '\u2725',
+    label: 'Orchestration',
+    color: 'orch',
+    desc: 'Skills system, sub-agents, MCP servers, hooks.',
+    presets: ['intermediate','advanced','team'],
+    components: [
+      { title: 'Skills System', desc: '50+ slash commands. /daily-focus, /research, /eval...', badge: '50+ skills', color: 'purple' },
+      { title: 'Sub-agents', desc: 'Background tasks: haiku for research, sonnet for analysis.', badge: 'parallel', color: 'teal' },
+      { title: 'MCP: Calendar', desc: 'Google Calendar read/write. Daily schedule awareness.', badge: 'mcp', color: 'green' },
+      { title: 'MCP: Telegram', desc: 'Send/read messages. Channel rules enforced.', badge: 'mcp', color: 'blue' },
+      { title: 'MCP: Linear', desc: 'Task management. Ambient awareness of current sprint.', badge: 'mcp', color: 'amber' },
+      { title: 'MCP: Notion', desc: 'External knowledge base and shared docs.', badge: 'mcp', color: 'text3' },
+      { title: 'MCP: Krisp', desc: 'Meeting transcripts and action items.', badge: 'mcp', color: 'purple' },
+      { title: 'MCP: Playwright', desc: 'Browser automation, screenshots, testing.', badge: 'mcp', color: 'red' },
+      { title: 'MCP: Filesystem', desc: 'Safe file operations across allowed directories.', badge: 'mcp', color: 'green' },
+      { title: 'Hooks', desc: 'Pre/post processing. Validation before commit.', badge: 'system', color: 'teal' },
+    ],
+    diagram: {
+      title: 'MCP Architecture',
+      nodes: [
+        { text: 'Claude Code', hl: true },
+        { text: '\u2192', arrow: true },
+        { text: 'MCP Protocol', hl: false },
+        { text: '\u2192', arrow: true },
+        { text: 'Calendar | Telegram | Linear | Notion | Krisp | Playwright', hl: true },
+      ]
+    },
+    example: {
+      file: 'skills/ directory',
+      body: [
+        { text: '~/.claude/skills/\n', cls: 'hl' },
+        { text: '\u251c\u2500\u2500 daily-focus.md       ', cls: '' }, { text: '# morning routine\n', cls: 'comment' },
+        { text: '\u251c\u2500\u2500 calendar.md          ', cls: '' }, { text: '# schedule awareness\n', cls: 'comment' },
+        { text: '\u251c\u2500\u2500 infocompressor.md    ', cls: '' }, { text: '# zero data loss compression\n', cls: 'comment' },
+        { text: '\u251c\u2500\u2500 context-compact.md   ', cls: '' }, { text: '# handoff at 70%+ context\n', cls: 'comment' },
+        { text: '\u251c\u2500\u2500 eval.md              ', cls: '' }, { text: '# binary T/R/C self-eval\n', cls: 'comment' },
+        { text: '\u251c\u2500\u2500 linear-action.md     ', cls: '' }, { text: '# update/close/comment tasks\n', cls: 'comment' },
+        { text: '\u251c\u2500\u2500 art.md               ', cls: '' }, { text: '# GPU visual art pipelines\n', cls: 'comment' },
+        { text: '\u2514\u2500\u2500 AIM-*.md             ', cls: 'hl-purple' }, { text: '# team skills (symlinked)\n', cls: 'comment' },
+      ]
+    }
+  },
+  {
+    id: 'skills',
+    icon: '\u2318',
+    label: 'Skills & Workflows',
+    color: 'skills',
+    desc: 'Daily routines, research pipelines, content creation.',
+    presets: ['intermediate','advanced','team'],
+    components: [
+      { title: '/daily-focus', desc: 'Morning briefing: calendar + Linear tasks + priorities.', badge: 'daily', color: 'amber' },
+      { title: '/pos-morning', desc: 'Full morning stack check. Systems status + agenda.', badge: 'daily', color: 'amber' },
+      { title: '/calendar', desc: 'Events from Google Calendar. Schedule-aware responses.', badge: 'utility', color: 'green' },
+      { title: '/AIM-lab', desc: 'Sprint management for AI Mindset Labs cohorts.', badge: 'team', color: 'purple' },
+      { title: '/research', desc: 'Deep research with Exa search + sub-agents.', badge: 'research', color: 'blue' },
+      { title: '/vox', desc: 'Voice note processing and transcription.', badge: 'content', color: 'teal' },
+      { title: '/context-compact', desc: 'Handoff generation when context > 70%.', badge: 'system', color: 'red' },
+      { title: '/imagine', desc: 'Visual content generation and art direction.', badge: 'creative', color: 'purple' },
+      { title: '/eval', desc: 'Detailed self-evaluation. Binary T/R/C rubric.', badge: 'quality', color: 'teal' },
+      { title: '/content-voice', desc: 'Tone adaptation: partner, public, internal.', badge: 'content', color: 'amber' },
+      { title: '/linear-action', desc: 'Update, close, comment, reassign Linear tasks.', badge: 'pm', color: 'blue' },
+      { title: '/ambient-advisor', desc: 'Background research on session topic.', badge: 'bg', color: 'green' },
+    ],
+    diagram: {
+      title: 'Morning Workflow',
+      nodes: [
+        { text: '/pos-morning', hl: true },
+        { text: '\u2192', arrow: true },
+        { text: '/calendar', hl: false },
+        { text: '+', arrow: true },
+        { text: '/daily-focus', hl: false },
+        { text: '+', arrow: true },
+        { text: 'Linear tasks', hl: false },
+        { text: '\u2192', arrow: true },
+        { text: 'Prioritized day plan', hl: true },
+      ]
+    },
+    example: {
+      file: '/daily-focus output',
+      body: [
+        { text: '\u25c7 ctx: 12K | 188K left | 6% | \u25cf\n', cls: 'hl' },
+        { text: '\u25ab eval: T:\u2713 R:\u2713 C:\u25cb\n', cls: 'hl-green' },
+        { text: '\u25ab linear: ', cls: 'hl-blue' }, { text: 'AIM-2054', cls: 'hl-amber' }, { text: ' \u00b7 BOS speakers \u00b7 \u25d0 IP\n\n', cls: '' },
+        { text: '## Today\u2019s Focus\n', cls: 'hl' },
+        { text: '1. AI-Native Sprint L02 preparation\n', cls: '' },
+        { text: '2. POS stack explorer \u2013 interactive demo\n', cls: '' },
+        { text: '3. Review BOS speaker pipeline\n\n', cls: '' },
+        { text: '\u25b6 3 meetings today, first at 10:00\n', cls: 'hl-amber' },
+      ]
+    }
+  },
+  {
+    id: 'people',
+    icon: '\u2661',
+    label: 'People & Org',
+    color: 'people',
+    desc: 'Team coordination: shared vault, roles, communication.',
+    presets: ['advanced','team'],
+    components: [
+      { title: 'Team Vault', desc: 'Obsidian Sync. ai-mindset-2026/ shared folder.', badge: 'shared', color: 'purple' },
+      { title: 'Linear Integration', desc: 'Task tracking. Ambient awareness in every session.', badge: 'pm', color: 'blue' },
+      { title: 'Role Cards', desc: '{role} files for each team member. Skills, zones, contacts.', badge: '8 people', color: 'amber' },
+      { title: 'Communication Rules', desc: 'AI Mindset style: lowercase, en dash, no corporate.', badge: 'style', color: 'teal' },
+      { title: 'Channel Rules', desc: 'Forbidden channels list. Protected public channels.', badge: 'safety', color: 'red' },
+      { title: 'AGENTS.md', desc: 'Team vault index. Structure map for AI agents.', badge: 'index', color: 'green' },
+    ],
+    diagram: {
+      title: 'Team Data Flow',
+      nodes: [
+        { text: 'Obsidian Sync', hl: false },
+        { text: '\u2192', arrow: true },
+        { text: 'Team Vault', hl: true },
+        { text: '\u2192', arrow: true },
+        { text: 'AGENTS.md + Role Cards', hl: false },
+        { text: '\u2192', arrow: true },
+        { text: 'Context-aware delegation', hl: true },
+      ]
+    },
+    example: {
+      file: 'Org/HR/roles/{role} example',
+      body: [
+        { text: '---\n', cls: 'hl' },
+        { text: 'name: Irina Nazarova\n', cls: '' },
+        { text: 'role: Operations Lead\n', cls: 'hl-amber' },
+        { text: 'zones: [operations, finance, compliance]\n', cls: '' },
+        { text: 'telegram: @irina_naz\n', cls: '' },
+        { text: '---\n\n', cls: 'hl' },
+        { text: '## Responsibilities\n', cls: 'hl-blue' },
+        { text: '- Sprint operations and daily standups\n', cls: '' },
+        { text: '- Financial tracking and invoicing\n', cls: '' },
+        { text: '- Participant support pipeline\n\n', cls: '' },
+        { text: '## Cross-check Rule\n', cls: 'hl-blue' },
+        { text: '# \u26a0 Flag if assigned: tech tasks, content creation\n', cls: 'comment' },
+      ]
+    }
+  },
+  {
+    id: 'gov',
+    icon: '\u2726',
+    label: 'Governance',
+    color: 'gov',
+    desc: 'Quality control, context management, self-improvement.',
+    presets: ['advanced','team'],
+    components: [
+      { title: 'Context Protocol', desc: '\u25cf OK / \u25d0 WARN / \u25cb CRIT. Auto-handoff at 70%.', badge: 'protocol', color: 'teal' },
+      { title: 'Evals System', desc: 'Binary T/R/C in every response. No scales, pass/fail.', badge: 'quality', color: 'green' },
+      { title: 'Memory System', desc: 'Auto-memory + episodic. Patterns persist across sessions.', badge: 'persistent', color: 'blue' },
+      { title: 'Linear Awareness', desc: 'Ambient layer. Detects related tasks, suggests actions.', badge: 'ambient', color: 'amber' },
+      { title: 'OpenSpec', desc: 'Spec-first development. Proposal \u2192 design \u2192 tasks \u2192 code.', badge: 'dev', color: 'purple' },
+      { title: 'Rubric File', desc: '~/.claude/evals/rubric.md. Criteria for T, R, C domains.', badge: 'file', color: 'text3' },
+    ],
+    diagram: {
+      title: 'Quality Loop',
+      nodes: [
+        { text: 'Response', hl: false },
+        { text: '\u2192', arrow: true },
+        { text: 'Auto-Eval (T/R/C)', hl: true },
+        { text: '\u2192', arrow: true },
+        { text: 'Memory update', hl: false },
+        { text: '\u2192', arrow: true },
+        { text: 'Next response improved', hl: true },
+      ]
+    },
+    example: {
+      file: 'Context Management in action',
+      body: [
+        { text: '# Context states:\n\n', cls: 'comment' },
+        { text: '\u25cf  < 50%   OK    ', cls: 'hl-green' }, { text: 'Full functionality\n', cls: '' },
+        { text: '\u25d0  50-70%  WARN  ', cls: 'hl-amber' }, { text: 'Compact mode, save context\n', cls: '' },
+        { text: '\u25cb  > 70%   CRIT  ', cls: 'hl' }, { text: 'Handoff only, no new tasks\n\n', cls: '' },
+        { text: '# Footer in every response:\n', cls: 'comment' },
+        { text: '\u25c7 ctx: 96K | 104K left | 48% | \u25cf\n', cls: 'hl' },
+        { text: '\u25ab eval: T:\u2713 R:\u2713 C:\u2713\n', cls: 'hl-green' },
+        { text: '\u25ab linear: AIM-2054 \u00b7 BOS speakers \u00b7 \u25d0 IP\n', cls: 'hl-blue' },
+      ]
+    }
+  }
+];
+
+const CONCEPTS = [
+  {
+    quote: '"Agent = LLM + Harness"',
+    title: 'Harness Components in POS',
+    mapping: 'LLM = Opus 4.6 (1M context)\nHarness = Claude Code CLI + CLAUDE.md + skills/ + memory/ + MCP servers\n\nThe harness is what makes the difference. Same model, completely different capability when wrapped in 50+ skills, persistent memory, and 7 MCP integrations.\n\nWithout harness: smart chatbot.\nWith harness: autonomous operating system.'
+  },
+  {
+    quote: '"Moat = orchestrator, not the model"',
+    title: 'Your Data is the Moat',
+    mapping: '15,000 notes in Obsidian = your unique dataset\nCLAUDE.md = your operating manual\nmemory/ = learned patterns specific to you\nNaming convention = structured retrieval\n\nAnyone can access Opus 4.6.\nNo one else has YOUR vault + YOUR rules + YOUR memory.\n\nThe moat is the orchestration layer that makes the generic model specifically yours.'
+  },
+  {
+    quote: '"Dopamine trap \u2013 3-hour prompt spirals"',
+    title: 'POS Prevents Prompt Spirals',
+    mapping: 'Context Protocol: auto-handoff at 70% usage\n\u2192 Forces session boundaries\n\nSkills: /daily-focus structures the day\n\u2192 Prevents reactive mode\n\nEvals: binary T/R/C in every response\n\u2192 Continuous quality feedback\n\nLinear Awareness: ambient task tracking\n\u2192 Stay connected to actual priorities\n\nResult: agent works FOR your goals, not your curiosity.'
+  },
+  {
+    quote: '"Executor \u2192 Architect"',
+    title: 'Skill = Specification, Not Execution',
+    mapping: 'Old way: you type prompts, AI executes, you fix\nPOS way: you write skills (specifications), AI follows\n\nSkill file = reusable specification:\n- What to do (steps)\n- What rules to follow\n- What output format to use\n- What tools to invoke\n\nYou design the system once.\nThe system executes every time.\nYou are the architect, not the typist.'
+  }
+];
+
+// L01 Concepts data (from Stepan's lecture)
+const L01_CONCEPTS = [
+  {
+    slide: '#7',
+    title: 'POS \u2192 Team OS \u2192 Company OS',
+    quote: 'Start with 1 person, 3 skills. Scale from there.',
+    body: 'The maturity path is always personal first. You cannot build a Team OS without each member having a working POS.\n\nToday we build the first column: 1 person, 3 skills, 1 CLAUDE.md.\n\nTomorrow we bridge to team: shared vault, role cards, Linear integration.',
+    link: 'pos-setup.html#1'
+  },
+  {
+    slide: '#8',
+    title: 'Dopamine / Cortisol Trap',
+    quote: 'METR: -19% speed, +20% perceived speed. You feel faster but you are slower.',
+    body: 'The trap: spending 3 hours prompting, feeling productive, shipping nothing.\n\nSolution: reduce friction to access (Raycast, voice input, keyboard shortcuts), but add structure to output (skills, evals, naming).\n\nkeyboard.aimindset.org \u2014 optimize input. Skills \u2014 optimize output.',
+    link: 'pos-setup.html#2'
+  },
+  {
+    slide: '#9',
+    title: 'Moat = Orchestrator',
+    quote: 'Your moat is not the model. Your moat is your context and rules.',
+    body: 'Everyone has access to the same models. The differentiator is:\n\n\u2022 Your data (15K+ notes in Obsidian)\n\u2022 Your rules (CLAUDE.md, naming convention)\n\u2022 Your memory (persistent patterns across sessions)\n\u2022 Your skills (50+ reusable specifications)\n\nThis is why we spend time on CLAUDE.md today \u2014 it is your competitive advantage.',
+    link: null
+  },
+  {
+    slide: '#19',
+    title: 'Why Transformation Fails',
+    quote: '"Agent hallucinates" \u2192 no memory. "Unsafe" \u2192 no guardrails.',
+    body: 'Common complaints and their real causes:\n\n\u2022 "Agent hallucinates" \u2192 No memory, no validation rules\n\u2022 "It is unsafe" \u2192 No guardrails in CLAUDE.md\n\u2022 "Results are inconsistent" \u2192 No naming convention, no evals\n\u2022 "It does not understand my business" \u2192 No strategy in context\n\nYour CLAUDE.md is guardrails level 0. We build it today.',
+    link: null
+  },
+  {
+    slide: '#54',
+    title: 'Agent = LLM + Harness',
+    quote: 'The harness is the system around the intelligence of the model.',
+    body: 'LLM = Opus 4.6 (the brain)\nHarness = everything else:\n\u2022 CLAUDE.md (operating manual)\n\u2022 skills/ (reusable specifications)\n\u2022 memory/ (persistent patterns)\n\u2022 MCP servers (Calendar, Linear, Telegram...)\n\u2022 Hooks (pre/post processing)\n\nToday you build your first harness. Claude Code is the runtime for it.',
+    link: 'pos-setup.html#5'
+  },
+  {
+    slide: '#56',
+    title: 'Harness Engineering',
+    quote: 'Prompt Engineering \u2192 Context Engineering \u2192 Harness Engineering. 2026 is agent harnesses.',
+    body: 'The evolution:\n\n2023: Prompt Engineering \u2014 craft the perfect prompt\n2024: Context Engineering \u2014 feed the right context\n2026: Harness Engineering \u2014 build the system\n\nCLAUDE.md is more important than any single prompt because it runs on every session. Skills are more important than prompts because they are reusable.',
+    link: null
+  },
+  {
+    slide: '#58',
+    title: 'Model = Electricity, Harness = Engine',
+    quote: 'Your advantage: 1. Data. 2. Processes. 3. People.',
+    body: 'The model is commodity (like electricity).\nThe harness is your engine (unique to you).\n\nData = your Obsidian vault, your naming convention\nProcesses = your skills, your workflows\nPeople = your role cards, your communication rules\n\nWithout a harness, the model is a generic chatbot.\nWith a harness, it is YOUR operating system.',
+    link: null
+  },
+  {
+    slide: '#59',
+    title: 'What LLMs Cannot Do',
+    quote: '1. Define the goal. 2. Take responsibility.',
+    body: 'This is why your strategy, values, and rules matter.\n\nThe agent cannot decide your company direction.\nThe agent cannot be accountable for results.\n\nBut it CAN execute within guardrails you set.\nYour CLAUDE.md defines those guardrails.\nYour strategy document gives direction.\n\n"Convention = Agreement" \u2014 you agree on rules, agent follows them.',
+    link: 'pos-setup.html#4'
+  },
+  {
+    slide: '#61-63',
+    title: 'Autonomy Map L0\u2013L3',
+    quote: 'Your task: determine where judgment is necessary, and automate everything else.',
+    body: 'L0: Human does, AI suggests (negotiations, budget approval)\nL1: AI drafts, human approves (email draft, code review)\nL2: AI executes, human monitors (outreach, coding, fraud detection)\nL3: Autopilot, escalation by exception (CI/CD, monitoring, scoring)\n\nExercise: pick 3 processes, map current level, identify target level for this week.',
+    link: null
+  },
+  {
+    slide: '#68',
+    title: 'Executor \u2192 Architect',
+    quote: 'You do not write the report \u2014 you write the specification of the report.',
+    body: 'Old way: open ChatGPT, type prompt, get result, fix it, repeat.\nPOS way: write a skill (specification), run /skill-name, get consistent result.\n\nSkill = reusable specification:\n\u2022 Steps to follow\n\u2022 Rules to obey\n\u2022 Output format\n\u2022 Tools to invoke\n\nYou design the system once. It executes every time.',
+    link: 'pos-setup.html#6'
+  },
+  {
+    slide: '#73',
+    title: '6 Layers of AI-Native',
+    quote: 'Infrastructure \u2192 Data \u2192 Orchestration \u2192 Skills \u2192 People \u2192 Governance',
+    body: 'This playground shows all 6 layers of a production POS.\n\nUse the sidebar to explore each layer.\nUse presets to see what matters at each maturity stage.\n\nBeginner: L1-L2 (Infrastructure + Data)\nIntermediate: L1-L4 (add Orchestration + Skills)\nAdvanced: all 6 layers connected\nTeam: bridge from POS to Team OS',
+    link: null
+  },
+  {
+    slide: '#78',
+    title: 'Week 1 Goal',
+    quote: 'Claude Code installed + CLAUDE.md + 3 working skills + autonomy map.',
+    body: 'Homework:\n1. Install Claude Code, create CLAUDE.md\n2. 3 working skills in .claude/skills/\n3. 3 processes + L0-L3 autonomy map\n4. Download aim-skill: cybos.ai/aim-skill.zip\n5. Take the quiz: codos.ai/quiz\n6. (bonus) Vibe-code a SaaS you are paying for\n\nHow to submit: screenshot of working skill in chat (#support)',
+    link: null
+  }
+];
+
+// Node graph data: skills and their MCP dependencies
+const GRAPH_NODES = [
+  // Core
+  { id: 'claude', label: 'Claude Code', type: 'core', x: 400, y: 210 },
+  // MCP servers
+  { id: 'mcp-calendar', label: 'Calendar', type: 'mcp', x: 120, y: 60 },
+  { id: 'mcp-telegram', label: 'Telegram', type: 'mcp', x: 280, y: 40 },
+  { id: 'mcp-linear', label: 'Linear', type: 'mcp', x: 520, y: 40 },
+  { id: 'mcp-notion', label: 'Notion', type: 'mcp', x: 680, y: 60 },
+  { id: 'mcp-krisp', label: 'Krisp', type: 'mcp', x: 700, y: 160 },
+  { id: 'mcp-playwright', label: 'Playwright', type: 'mcp', x: 700, y: 260 },
+  { id: 'mcp-filesystem', label: 'Filesystem', type: 'mcp', x: 680, y: 360 },
+  { id: 'mcp-exa', label: 'Exa Search', type: 'mcp', x: 520, y: 390 },
+  { id: 'mcp-episodic', label: 'Episodic Memory', type: 'mcp', x: 280, y: 390 },
+  // Data
+  { id: 'vault', label: 'Obsidian Vault', type: 'data', x: 100, y: 210 },
+  { id: 'memory', label: 'memory/', type: 'data', x: 120, y: 360 },
+  // Skills
+  { id: 'sk-daily', label: '/daily-focus', type: 'skill', x: 200, y: 130 },
+  { id: 'sk-calendar', label: '/calendar', type: 'skill', x: 80, y: 130 },
+  { id: 'sk-research', label: '/research', type: 'skill', x: 400, y: 390 },
+  { id: 'sk-linear', label: '/linear-action', type: 'skill', x: 560, y: 130 },
+  { id: 'sk-eval', label: '/eval', type: 'skill', x: 540, y: 300 },
+  { id: 'sk-vox', label: '/vox', type: 'skill', x: 650, y: 210 },
+  { id: 'sk-compact', label: '/context-compact', type: 'skill', x: 200, y: 300 },
+  { id: 'sk-ambient', label: '/ambient-advisor', type: 'skill', x: 400, y: 100 },
+  { id: 'sk-content', label: '/content-voice', type: 'skill', x: 350, y: 310 },
+];
+
+const GRAPH_EDGES = [
+  // Skills -> Claude Code (core)
+  { from: 'sk-daily', to: 'claude' },
+  { from: 'sk-calendar', to: 'claude' },
+  { from: 'sk-research', to: 'claude' },
+  { from: 'sk-linear', to: 'claude' },
+  { from: 'sk-eval', to: 'claude' },
+  { from: 'sk-vox', to: 'claude' },
+  { from: 'sk-compact', to: 'claude' },
+  { from: 'sk-ambient', to: 'claude' },
+  { from: 'sk-content', to: 'claude' },
+  // Skills -> MCP servers
+  { from: 'sk-daily', to: 'mcp-calendar' },
+  { from: 'sk-daily', to: 'mcp-linear' },
+  { from: 'sk-calendar', to: 'mcp-calendar' },
+  { from: 'sk-linear', to: 'mcp-linear' },
+  { from: 'sk-research', to: 'mcp-exa' },
+  { from: 'sk-research', to: 'mcp-episodic' },
+  { from: 'sk-vox', to: 'mcp-krisp' },
+  { from: 'sk-ambient', to: 'mcp-exa' },
+  { from: 'sk-ambient', to: 'mcp-linear' },
+  { from: 'sk-content', to: 'mcp-telegram' },
+  // Claude Code -> MCP servers
+  { from: 'claude', to: 'mcp-filesystem' },
+  { from: 'claude', to: 'mcp-playwright' },
+  { from: 'claude', to: 'mcp-notion' },
+  // Claude Code -> Data
+  { from: 'claude', to: 'vault' },
+  { from: 'claude', to: 'memory' },
+  // Skills -> Data
+  { from: 'sk-compact', to: 'memory' },
+  { from: 'sk-eval', to: 'memory' },
+  { from: 'sk-daily', to: 'vault' },
+];
+
+const PRESETS = {
+  beginner: {
+    layers: ['infra','data'],
+    label: 'Beginner',
+    desc: 'Start here: Claude Code + CLAUDE.md + your first skill.',
+    components: {
+      infra: ['Claude Code','Opus 4.6'],
+      data: ['CLAUDE.md','Naming Convention'],
+    }
+  },
+  intermediate: {
+    layers: ['infra','data','orch','skills'],
+    label: 'Intermediate',
+    desc: 'Full personal POS: vault, 5+ skills, 2+ MCP servers.',
+    components: {
+      infra: ['Claude Code','Opus 4.6','iTerm2 + cmux'],
+      data: ['Obsidian Vault','CLAUDE.md','memory/','Naming Convention'],
+      orch: ['Skills System','MCP: Calendar','MCP: Filesystem'],
+      skills: ['/daily-focus','/calendar','/research','/context-compact','/eval'],
+    }
+  },
+  advanced: {
+    layers: ['infra','data','orch','skills','people','gov'],
+    label: 'Advanced',
+    desc: 'Alex\'s actual stack. Everything connected.',
+    components: null // all
+  },
+  team: {
+    layers: ['infra','data','orch','skills','people','gov'],
+    label: 'Team Bridge',
+    desc: 'What to add for team: shared vault, Linear, role cards.',
+    components: null,
+    highlight: ['people']
+  }
+};
+
+// ─── STATE ──────────────────────────────────────────────────────────────────
+
+let currentPreset = 'advanced';
+let activeLayer = null;
+let graphMode = 'all';
+let hoveredNode = null;
+
+// ─── RENDER ─────────────────────────────────────────────────────────────────
+
+function renderSidebar() {
+  const sidebar = document.getElementById('sidebar');
+  const preset = PRESETS[currentPreset];
+  const nums = { infra: 'L1', data: 'L2', orch: 'L3', skills: 'L4', people: 'L5', gov: 'L6' };
+
+  sidebar.innerHTML = LAYERS.map(l => {
+    const enabled = preset.layers.includes(l.id);
+    const isActive = activeLayer === l.id;
+    const isHighlight = preset.highlight && preset.highlight.includes(l.id);
+    let cls = 'layer-item';
+    if (isActive) cls += ' active';
+    if (!enabled) cls += ' locked';
+    return `
+      <div class="${cls}" onclick="${enabled ? `selectLayer('${l.id}')` : ''}" ${isHighlight ? 'style="border-left-color:var(--amber)"' : ''}>
+        <div class="layer-icon lc-${l.color}" style="${isActive ? 'background:var(--bg3)' : ''}">${l.icon}</div>
+        <span class="layer-label">${l.label}</span>
+        <span class="layer-num">${enabled ? nums[l.id] : '<span class="lock-icon">\u26BF</span>'}</span>
+      </div>
+    `;
+  }).join('');
+}
+
+function renderContent(layerId) {
+  const layer = LAYERS.find(l => l.id === layerId);
+  if (!layer) return;
+
+  const preset = PRESETS[currentPreset];
+  const content = document.getElementById('content');
+
+  // Filter components by preset
+  let comps = layer.components;
+  if (preset.components && preset.components[layerId]) {
+    const allowed = preset.components[layerId];
+    comps = comps.filter(c => allowed.includes(c.title));
+  }
+
+  const colorMap = { green: 'var(--green)', teal: 'var(--teal)', blue: 'var(--blue)', amber: 'var(--amber)', red: 'var(--red)', purple: 'var(--purple)', text3: 'var(--text3)' };
+
+  content.innerHTML = `
+    <div class="fade-in">
+      <div class="content-header">
+        <h2>
+          <span class="lc-${layer.color}">${layer.icon}</span>
+          ${layer.label}
+          <span class="tag bg-${layer.color}">${comps.length} components</span>
+        </h2>
+        <p>${layer.desc}</p>
+      </div>
+
+      <div class="components-grid">
+        ${comps.map(c => `
+          <div class="comp-card">
+            <div class="comp-card-title">
+              ${c.title}
+              <span class="comp-badge" style="background:${colorMap[c.color] || 'var(--text3)'};color:var(--bg);opacity:0.9">${c.badge}</span>
+            </div>
+            <div class="comp-card-desc">${c.desc}</div>
+          </div>
+        `).join('')}
+      </div>
+
+      <div class="diagram">
+        <div class="diagram-title">${layer.diagram.title}</div>
+        <div class="diagram-flow">
+          ${layer.diagram.nodes.map(n => {
+            if (n.arrow) return `<span class="diagram-arrow">${n.text}</span>`;
+            return `<span class="diagram-node${n.hl ? ' highlight' : ''}">${n.text}</span>`;
+          }).join('')}
+        </div>
+      </div>
+
+      <div class="example-block">
+        <div class="example-header">
+          <span class="file-icon">\u25A0</span>
+          <span class="file-name">${layer.example.file}</span>
+        </div>
+        <div class="example-body">${layer.example.body.map(b => `<span class="${b.cls}">${escapeHtml(b.text)}</span>`).join('')}</div>
+      </div>
+    </div>
+  `;
+
+  // Update component count
+  updateFooter();
+}
+
+function renderConcepts() {
+  const grid = document.getElementById('concepts-grid');
+  grid.innerHTML = CONCEPTS.map((c, i) => `
+    <div class="concept-card" onclick="toggleConcept(this)">
+      <div class="concept-quote">${c.quote}</div>
+      <div class="concept-title">${c.title}</div>
+      <div class="concept-mapping">${escapeHtml(c.mapping).replace(/\n/g, '<br>')}</div>
+    </div>
+  `).join('');
+}
+
+function renderL01Concepts() {
+  const grid = document.getElementById('l01-concepts-grid');
+  grid.innerHTML = L01_CONCEPTS.map((c, i) => `
+    <div class="l01-card" onclick="toggleL01Card(this)">
+      <div class="l01-slide">L01 slide ${c.slide}</div>
+      <div class="l01-card-title">${c.title}</div>
+      <div class="l01-card-quote">${c.quote}</div>
+      <div class="l01-card-body">
+        ${escapeHtml(c.body).replace(/\n/g, '<br>')}
+        ${c.link ? `<a class="l01-card-link" href="https://ai-mindset-org.github.io/ainative-deck/${c.link}" target="_blank">&nearr; Open in deck</a>` : ''}
+      </div>
+    </div>
+  `).join('');
+}
+
+function toggleL01Card(el) {
+  document.querySelectorAll('.l01-card').forEach(c => {
+    if (c !== el) c.classList.remove('expanded');
+  });
+  el.classList.toggle('expanded');
+}
+
+function renderPrompt() {
+  const output = document.getElementById('prompt-output');
+  const preset = PRESETS[currentPreset];
+  let prompt = '';
+
+  if (currentPreset === 'beginner') {
+    prompt = `<span class="prompt-kw">You are setting up a Personal Operating System (POS).</span>
+
+<span class="prompt-kw">Step 1: Install Claude Code</span>
+npm install -g @anthropic-ai/claude-code
+
+<span class="prompt-kw">Step 2: Create your CLAUDE.md</span>
+Create a file called CLAUDE.md in your project root.
+Write 3-5 rules about how you want the AI to behave:
+- Your preferred response format
+- Key project conventions
+- File naming patterns
+
+<span class="prompt-kw">Step 3: Create your first skill</span>
+mkdir -p ~/.claude/skills
+Create a file: ~/.claude/skills/daily-focus.md
+
+Write a specification for your morning routine:
+- What data to check (calendar, tasks, emails)
+- How to format the output
+- What to prioritize
+
+<span class="prompt-kw">That's it. You now have a POS.</span>
+The model reads CLAUDE.md on every session.
+The skill runs when you type /daily-focus.
+Start here. Add layers when you need them.`;
+  } else if (currentPreset === 'intermediate') {
+    prompt = `<span class="prompt-kw">Your POS stack: Claude Code + Obsidian + Skills + MCP</span>
+
+<span class="prompt-kw">Foundation (you have this):</span>
+- Claude Code installed via npm
+- CLAUDE.md with your rules
+- 1-2 skills working
+
+<span class="prompt-kw">Next steps to add:</span>
+
+1. <span class="prompt-kw">Obsidian vault as knowledge base</span>
+   Point Claude at your vault via filesystem MCP.
+   Add naming convention to CLAUDE.md.
+   Create AGENTS.md as index for AI navigation.
+
+2. <span class="prompt-kw">memory/ directory</span>
+   Claude auto-creates memory files.
+   Patterns persist across sessions.
+   Review monthly, prune what's stale.
+
+3. <span class="prompt-kw">5 core skills</span>
+   /daily-focus, /calendar, /research,
+   /context-compact, /eval
+   Each is a .md file in ~/.claude/skills/
+
+4. <span class="prompt-kw">2 MCP servers</span>
+   Start with: filesystem + calendar
+   Add more when you feel the need.
+
+<span class="prompt-kw">Key principle:</span> add layers when pain appears.
+Don't build what you don't need yet.`;
+  } else if (currentPreset === 'team') {
+    prompt = `<span class="prompt-kw">Adding team layer to your POS:</span>
+
+<span class="prompt-kw">1. Shared Vault (Obsidian Sync)</span>
+   Create a shared folder in your vault.
+   Add AGENTS.md with folder structure.
+   Team naming: {TEAM} {type} desc \u2013 YYYY-MM-DD.md
+
+<span class="prompt-kw">2. Role Cards</span>
+   For each team member, create:
+   Org/HR/roles/{role} Name.md
+   Include: responsibilities, zones, cross-check rules.
+   AI uses these to flag misassigned tasks.
+
+<span class="prompt-kw">3. Linear Integration</span>
+   Add Linear MCP server.
+   Enable ambient awareness in CLAUDE.md.
+   AI detects related tasks, suggests updates.
+
+<span class="prompt-kw">4. Communication Rules</span>
+   Define your team's style in CLAUDE.md:
+   - Tone, formatting, forbidden patterns
+   - Channel rules (which channels AI can/cannot post to)
+   - Delegation rules (who handles what)
+
+<span class="prompt-kw">5. Team Skills</span>
+   Place in shared vault: aim-rules/skills/
+   Symlink to ~/.claude/skills/ for Claude Code access.
+   Prefix with team code: AIM-*, TEAM-*
+
+<span class="prompt-kw">Result:</span> AI knows your team structure, follows
+your communication style, tracks tasks, and
+flags cross-responsibility violations.`;
+  } else {
+    prompt = `<span class="prompt-kw">Alex's full POS stack \u2013 what makes it work:</span>
+
+<span class="prompt-kw">6 layers, all connected:</span>
+
+L1 Infrastructure:  Claude Code + Opus 4.6 (1M) + iTerm2/cmux
+L2 Data & Context:  15K+ Obsidian notes + CLAUDE.md + memory/
+L3 Orchestration:   50+ skills + sub-agents + 7 MCP servers
+L4 Skills:          /daily-focus /research /eval /vox /imagine
+L5 People & Org:    Shared vault + Linear + 8 role cards
+L6 Governance:      Context Protocol + Evals + Memory + Linear Awareness
+
+<span class="prompt-kw">What took the longest to build:</span>
+- CLAUDE.md: 3 months of iteration
+- Naming convention: tried 4 versions before current
+- Skills: started with 3, now 50+ (most written by AI)
+- Evals: added after noticing quality drift at month 2
+
+<span class="prompt-kw">What you should NOT copy:</span>
+- Don't build 50 skills on day 1
+- Don't set up all MCP servers before you need them
+- Don't write a 500-line CLAUDE.md upfront
+
+<span class="prompt-kw">What you SHOULD copy:</span>
+- Start with CLAUDE.md (even 5 lines)
+- Add ONE skill that saves you 10 min/day
+- Let memory/ accumulate naturally
+- Add governance when you notice quality problems
+
+<span class="prompt-kw">The system grows with you. Start small, add layers when pain appears.</span>`;
+  }
+
+  output.innerHTML = prompt + '\n\n<button class="copy-btn" onclick="copyPrompt()">copy</button>';
+}
+
+// ─── NODE GRAPH ─────────────────────────────────────────────────────────────
+
+function drawNodeGraph() {
+  const canvas = document.getElementById('nodeGraphCanvas');
+  const ctx = canvas.getContext('2d');
+  const rect = canvas.parentElement.getBoundingClientRect();
+  const dpr = window.devicePixelRatio || 1;
+
+  canvas.width = rect.width * dpr;
+  canvas.height = 420 * dpr;
+  canvas.style.width = rect.width + 'px';
+  canvas.style.height = '420px';
+  ctx.scale(dpr, dpr);
+
+  const W = rect.width;
+  const H = 420;
+  const scaleX = W / 800;
+  const scaleY = H / 420;
+
+  ctx.clearRect(0, 0, W, H);
+
+  const colors = {
+    core: '#4dc9d4',
+    mcp: '#a371f7',
+    skill: '#e5a54b',
+    data: '#3b82f6'
+  };
+
+  const filteredNodes = GRAPH_NODES.filter(n => {
+    if (graphMode === 'skills') return n.type === 'skill' || n.type === 'core';
+    if (graphMode === 'mcp') return n.type === 'mcp' || n.type === 'core';
+    return true;
+  });
+
+  const nodeIds = new Set(filteredNodes.map(n => n.id));
+
+  const filteredEdges = GRAPH_EDGES.filter(e => nodeIds.has(e.from) && nodeIds.has(e.to));
+
+  // Draw edges
+  filteredEdges.forEach(e => {
+    const from = GRAPH_NODES.find(n => n.id === e.from);
+    const to = GRAPH_NODES.find(n => n.id === e.to);
+    if (!from || !to) return;
+
+    const isHovered = hoveredNode && (e.from === hoveredNode || e.to === hoveredNode);
+
+    ctx.beginPath();
+    ctx.moveTo(from.x * scaleX, from.y * scaleY);
+    ctx.lineTo(to.x * scaleX, to.y * scaleY);
+    ctx.strokeStyle = isHovered ? 'rgba(77,201,212,0.6)' : 'rgba(48,54,61,0.5)';
+    ctx.lineWidth = isHovered ? 2 : 1;
+    ctx.stroke();
+  });
+
+  // Draw nodes
+  filteredNodes.forEach(n => {
+    const x = n.x * scaleX;
+    const y = n.y * scaleY;
+    const r = n.type === 'core' ? 24 : 16;
+    const isHovered = hoveredNode === n.id;
+    const isConnected = hoveredNode && GRAPH_EDGES.some(e =>
+      (e.from === hoveredNode && e.to === n.id) || (e.to === hoveredNode && e.from === n.id)
+    );
+    const dimmed = hoveredNode && !isHovered && !isConnected && hoveredNode !== n.id;
+
+    // Glow for hovered
+    if (isHovered) {
+      ctx.beginPath();
+      ctx.arc(x, y, r + 8, 0, Math.PI * 2);
+      ctx.fillStyle = colors[n.type] + '20';
+      ctx.fill();
+    }
+
+    // Node circle
+    ctx.beginPath();
+    ctx.arc(x, y, r, 0, Math.PI * 2);
+    ctx.fillStyle = dimmed ? '#161b22' : '#0d1117';
+    ctx.fill();
+    ctx.strokeStyle = dimmed ? 'rgba(48,54,61,0.3)' : colors[n.type];
+    ctx.lineWidth = isHovered ? 2.5 : 1.5;
+    ctx.stroke();
+
+    // Label
+    ctx.font = `${n.type === 'core' ? 11 : 10}px "SF Mono", monospace`;
+    ctx.fillStyle = dimmed ? 'rgba(110,118,129,0.3)' : (isHovered || isConnected ? '#e6edf3' : '#8b949e');
+    ctx.textAlign = 'center';
+    ctx.textBaseline = 'middle';
+    ctx.fillText(n.label, x, y);
+  });
+}
+
+function setGraphMode(mode) {
+  graphMode = mode;
+  document.querySelectorAll('.graph-btn').forEach(b => {
+    b.classList.toggle('active', b.textContent.toLowerCase().includes(mode === 'all' ? 'all' : mode));
+  });
+  drawNodeGraph();
+}
+
+// Canvas mouse interaction for node graph
+function initGraphInteraction() {
+  const canvas = document.getElementById('nodeGraphCanvas');
+  const rect_fn = () => canvas.getBoundingClientRect();
+
+  canvas.addEventListener('mousemove', (e) => {
+    const rect = rect_fn();
+    const mx = e.clientX - rect.left;
+    const my = e.clientY - rect.top;
+    const W = rect.width;
+    const H = 420;
+    const scaleX = W / 800;
+    const scaleY = H / 420;
+
+    let found = null;
+    GRAPH_NODES.forEach(n => {
+      const x = n.x * scaleX;
+      const y = n.y * scaleY;
+      const r = n.type === 'core' ? 28 : 20;
+      if (Math.hypot(mx - x, my - y) < r) found = n.id;
+    });
+
+    if (found !== hoveredNode) {
+      hoveredNode = found;
+      canvas.style.cursor = found ? 'pointer' : 'default';
+      drawNodeGraph();
+    }
+  });
+
+  canvas.addEventListener('mouseleave', () => {
+    hoveredNode = null;
+    drawNodeGraph();
+  });
+}
+
+// ─── NAMING CONVENTION ──────────────────────────────────────────────────────
+
+function updateNaming() {
+  const project = document.getElementById('naming-project').value;
+  const type = document.getElementById('naming-type').value;
+  const desc = document.getElementById('naming-desc').value || 'your description';
+  const today = new Date();
+  const date = today.getFullYear() + '-' +
+    String(today.getMonth() + 1).padStart(2, '0') + '-' +
+    String(today.getDate()).padStart(2, '0');
+  const result = `${project} ${type} ${desc} \u2013 ${date}.md`;
+  document.getElementById('naming-result').textContent = result;
+}
+
+function fillNaming(project, type, desc) {
+  document.getElementById('naming-project').value = project;
+  document.getElementById('naming-type').value = type;
+  document.getElementById('naming-desc').value = desc;
+  updateNaming();
+}
+
+function copyNaming() {
+  const text = document.getElementById('naming-result').textContent;
+  navigator.clipboard.writeText(text).then(() => {
+    const btn = document.querySelector('.naming-copy');
+    btn.textContent = 'copied!';
+    setTimeout(() => { btn.textContent = 'copy'; }, 1500);
+  });
+}
+
+// ─── ACTIONS ────────────────────────────────────────────────────────────────
+
+function selectLayer(id) {
+  activeLayer = id;
+  renderSidebar();
+  renderContent(id);
+  renderPrompt();
+}
+
+function setPreset(preset) {
+  currentPreset = preset;
+  document.querySelectorAll('.preset-btn').forEach(b => {
+    b.classList.toggle('active', b.dataset.preset === preset);
+  });
+
+  // Reset active layer if not in preset
+  const p = PRESETS[preset];
+  if (activeLayer && !p.layers.includes(activeLayer)) {
+    activeLayer = p.layers[0];
+  }
+  if (!activeLayer) {
+    activeLayer = p.layers[0];
+  }
+
+  renderSidebar();
+  renderContent(activeLayer);
+  renderPrompt();
+  document.getElementById('f-preset').textContent = preset;
+}
+
+function toggleConcept(el) {
+  // Close others
+  document.querySelectorAll('.concept-card').forEach(c => {
+    if (c !== el) c.classList.remove('expanded');
+  });
+  el.classList.toggle('expanded');
+}
+
+function copyPrompt() {
+  const output = document.getElementById('prompt-output');
+  const text = output.innerText.replace('copy', '').trim();
+  navigator.clipboard.writeText(text).then(() => {
+    const btn = output.querySelector('.copy-btn');
+    btn.textContent = 'copied!';
+    setTimeout(() => { btn.textContent = 'copy'; }, 1500);
+  });
+}
+
+function updateFooter() {
+  const preset = PRESETS[currentPreset];
+  document.getElementById('f-layers').textContent = preset.layers.length;
+  let total = 0;
+  preset.layers.forEach(lid => {
+    const layer = LAYERS.find(l => l.id === lid);
+    if (preset.components && preset.components[lid]) {
+      total += preset.components[lid].length;
+    } else {
+      total += layer.components.length;
+    }
+  });
+  document.getElementById('f-components').textContent = total;
+}
+
+function escapeHtml(str) {
+  return str.replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;');
+}
+
+// ─── INIT ───────────────────────────────────────────────────────────────────
+
+renderSidebar();
+renderConcepts();
+renderL01Concepts();
+selectLayer('infra');
+setPreset('advanced');
+updateNaming();
+
+// Init node graph after DOM ready
+setTimeout(() => {
+  drawNodeGraph();
+  initGraphInteraction();
+}, 100);
+
+// Redraw graph on resize
+window.addEventListener('resize', () => { drawNodeGraph(); });
+</script>
+</body>
+</html>
