@@ -241,7 +241,7 @@ body{background:var(--bg);color:var(--text);font-family:var(--mono);line-height:
     <div class="terminal-dot r"></div>
     <div class="terminal-dot y"></div>
     <div class="terminal-dot g"></div>
-    <div class="terminal-title">pos-stack-explorer ~ Alex Povaliaev &mdash; AI-Native Sprint Day 2</div>
+    <div class="terminal-title">pos-stack-explorer ~ Alex Povaliaev &mdash; AI-Native Sprint s2 Day 2</div>
   </div>
   <div class="terminal-body">
 
@@ -255,9 +255,9 @@ body{background:var(--bg);color:var(--text);font-family:var(--mono);line-height:
         </div>
       </div>
       <p class="header-sub">
-        Interactive explorer of a <strong>production POS</strong> running on Claude Code + Obsidian.
+        Interactive explorer of a <strong>production POS</strong> running on Claude Code, CoWork &amp; Obsidian.
         Click layers to explore. Pick a preset to see what matters at each stage.
-        Yesterday Stepan showed <strong>why</strong> &mdash; today we look at <strong>how</strong>.
+        Yesterday Stepan showed <strong>why</strong> (79 slides, Shopify to L0-L3) &mdash; today we build <strong>how</strong>.
       </p>
     </div>
 
@@ -358,8 +358,9 @@ body{background:var(--bg);color:var(--text);font-family:var(--mono);line-height:
         <div class="naming-example" onclick="fillNaming('{sprint}','{meeting}','POS Setup Workshop')">{sprint} {meeting} POS Setup Workshop &ndash; 2026-03-24.md</div>
       </div>
       <div class="naming-links">
-        <a href="https://pos-pipelines.netlify.app/naming.html" target="_blank">&nearr; Naming Convention Tool (pos-pipelines)</a>
+        <a href="https://ai-mindset-org.github.io/ainative-lab/naming.html" target="_blank">&nearr; Naming Convention Tool (pos-pipelines)</a>
         <a href="https://keyboard.aimindset.org" target="_blank">&nearr; keyboard.aimindset.org</a>
+        <a href="https://ai-mindset-org.github.io/ainative-lab/" target="_blank">&nearr; AI-Native Lab Hub</a>
       </div>
     </div>
 
@@ -405,9 +406,19 @@ body{background:var(--bg);color:var(--text);font-family:var(--mono);line-height:
           <div class="deeplink-url">keyboard.aimindset.org</div>
         </div>
         <div class="deeplink-card">
-          <a href="https://pos-pipelines.netlify.app/naming.html" target="_blank">Naming Tool (pos-pipelines)</a>
-          <p>Full naming convention reference and interactive tool. Live formatter with all project codes and types.</p>
-          <div class="deeplink-url">pos-pipelines.netlify.app/naming.html</div>
+          <a href="https://ai-mindset-org.github.io/ainative-lab/naming.html" target="_blank">Naming Convention (ainative-lab)</a>
+          <p>14-section guide: interactive builder, vault structure, downloadable .md template for participants.</p>
+          <div class="deeplink-url">ai-mindset-org.github.io/ainative-lab/naming.html</div>
+        </div>
+        <div class="deeplink-card">
+          <a href="https://ai-mindset-org.github.io/ainative-lab/" target="_blank">AI-Native Lab Hub</a>
+          <p>Central hub: naming guide, file builder, stack explorer (soon), CLAUDE.md generator (planned).</p>
+          <div class="deeplink-url">ai-mindset-org.github.io/ainative-lab/</div>
+        </div>
+        <div class="deeplink-card">
+          <a href="https://wisprflow.com" target="_blank">WISPR Flow</a>
+          <p>Voice-to-text dictation for Mac. Works in any app. Input layer of POS.</p>
+          <div class="deeplink-url">wisprflow.com</div>
         </div>
         <div class="deeplink-card">
           <a href="https://ai-mindset-org.github.io/ainative-deck/pos-setup.html#1" target="_blank">Slide #1 &mdash; Intro</a>
@@ -424,7 +435,7 @@ body{background:var(--bg);color:var(--text);font-family:var(--mono);line-height:
 
     <!-- Footer -->
     <div class="footer">
-      <div class="footer-left">pos-stack-explorer v2.0 &middot; 2026-03-24 &middot; AI-Native Organizations Sprint</div>
+      <div class="footer-left">pos-stack-explorer v2.1 &middot; 2026-03-24 &middot; AI-Native Organizations Sprint</div>
       <div class="footer-right">
         <div class="footer-stat">layers: <span class="val" id="f-layers">6</span></div>
         <div class="footer-stat">components: <span class="val" id="f-components">0</span></div>
@@ -446,10 +457,12 @@ const LAYERS = [
     desc: 'The foundation: model, runtime, terminal environment.',
     presets: ['beginner','intermediate','advanced','team'],
     components: [
-      { title: 'Claude Code', desc: 'CLI agent runtime. npm install, not native.', badge: 'runtime', color: 'green' },
+      { title: 'Claude Code', desc: 'CLI agent runtime. npm install, universal harness.', badge: 'runtime', color: 'green' },
+      { title: 'CoWork', desc: 'Visual UI for non-engineers. Same skills, no terminal needed.', badge: 'runtime', color: 'blue' },
       { title: 'Opus 4.6', desc: '1M context window. Holds entire codebase + vault context.', badge: 'model', color: 'teal' },
-      { title: 'iTerm2 + cmux', desc: 'Terminal multiplexer. Multiple agents in split panes.', badge: 'terminal', color: 'blue' },
-      { title: 'npm ecosystem', desc: '/opt/homebrew/bin/claude. Updatable, no Cloudflare blocks.', badge: 'pkg', color: 'text3' },
+      { title: 'WISPR Flow', desc: 'Voice-to-text in any field. 80% of messages dictated.', badge: 'input', color: 'amber' },
+      { title: 'Krisp', desc: 'Call transcription + action items + MCP server.', badge: 'input', color: 'purple' },
+      { title: 'iTerm2 + cmux', desc: 'Terminal multiplexer. Multiple agents in split panes.', badge: 'terminal', color: 'text3' },
     ],
     diagram: {
       title: 'Runtime Stack',
@@ -466,14 +479,14 @@ const LAYERS = [
     example: {
       file: '~/.zshrc',
       body: [
-        { text: '# Claude Code \u2014 npm installation\n', cls: 'comment' },
-        { text: 'export PATH="/opt/homebrew/bin:$PATH"\n', cls: '' },
-        { text: '\n# Quick aliases\n', cls: 'comment' },
-        { text: 'alias cc="claude"\n', cls: '' },
-        { text: 'alias ccu="npm update -g @anthropic-ai/claude-code"\n', cls: '' },
-        { text: '\n# Version check\n', cls: 'comment' },
-        { text: '$ claude --version\n', cls: 'hl' },
-        { text: 'claude-code 1.0.33 (claude-opus-4-6)\n', cls: 'hl-green' },
+        { text: '# Three runtimes \u2014 one stack\n', cls: 'comment' },
+        { text: 'Claude Code   \u2192 terminal, full control\n', cls: 'hl' },
+        { text: 'CoWork        \u2192 visual UI, business users\n', cls: 'hl-blue' },
+        { text: 'Codex         \u2192 engineers only, code-focused\n', cls: 'hl-purple' },
+        { text: '\n# Input layer\n', cls: 'comment' },
+        { text: 'WISPR Flow    \u2192 voice dictation everywhere\n', cls: 'hl-amber' },
+        { text: 'Krisp MCP     \u2192 call transcripts + actions\n', cls: 'hl-amber' },
+        { text: 'Raycast       \u2192 Cmd+Space \u2192 zero friction\n', cls: 'hl-green' },
       ]
     }
   },
@@ -581,7 +594,8 @@ const LAYERS = [
       { title: '/context-compact', desc: 'Handoff generation when context > 70%.', badge: 'system', color: 'red' },
       { title: '/imagine', desc: 'Visual content generation and art direction.', badge: 'creative', color: 'purple' },
       { title: '/eval', desc: 'Detailed self-evaluation. Binary T/R/C rubric.', badge: 'quality', color: 'teal' },
-      { title: '/content-voice', desc: 'Tone adaptation: partner, public, internal.', badge: 'content', color: 'amber' },
+      { title: '/content-voice', desc: '5 tones: partner, public, internal, gonzo, content.', badge: 'content', color: 'amber' },
+      { title: '/meeting-summary', desc: 'Transcript \u2192 structured summary + action items.', badge: 'pipeline', color: 'green' },
       { title: '/linear-action', desc: 'Update, close, comment, reassign Linear tasks.', badge: 'pm', color: 'blue' },
       { title: '/ambient-advisor', desc: 'Background research on session topic.', badge: 'bg', color: 'green' },
     ],
