@@ -159,7 +159,9 @@ body{background:var(--bg);color:var(--text);font-family:var(--mono);line-height:
   .concepts-grid{grid-template-columns:1fr}
   .pipeline-grid{grid-template-columns:1fr}
   .dept-grid{grid-template-columns:1fr 1fr}
-  .header,.presets,.concepts,.prompt-section,.footer,.naming-section,.node-graph-section,.pipeline-section,.deeplinks-section{padding-left:16px;padding-right:16px}
+  .sd-grid{grid-template-columns:1fr}
+  .guide-phase-body{font-size:11px}
+  .header,.presets,.concepts,.prompt-section,.footer,.naming-section,.node-graph-section,.pipeline-section,.deeplinks-section,.skills-dashboard,.setup-guide{padding-left:16px;padding-right:16px}
 }
 
 /* Status indicators */
@@ -211,6 +213,41 @@ body{background:var(--bg);color:var(--text);font-family:var(--mono);line-height:
 .pf-skill{padding:4px 10px;border:1px solid rgba(77,201,212,.4);border-radius:4px;color:var(--teal);background:rgba(77,201,212,.08);font-weight:600}
 .pf-out{padding:4px 10px;border:1px solid rgba(229,165,75,.3);border-radius:4px;color:var(--amber);background:rgba(229,165,75,.06)}
 .pf-a{color:var(--text3);font-size:14px;margin:0 2px}
+/* Skills Dashboard */
+.skills-dashboard{padding:16px 32px 24px;border-top:1px solid var(--border)}
+.skills-dashboard h3{font-size:14px;color:var(--text2);margin-bottom:12px;display:flex;align-items:center;gap:8px}
+.sd-controls{display:flex;gap:6px;margin-bottom:14px;flex-wrap:wrap}
+.sd-btn{padding:5px 12px;border-radius:6px;font-size:11px;color:var(--text3);background:var(--bg);border:1px solid var(--border);cursor:pointer;transition:all .15s;font-family:var(--mono)}
+.sd-btn:hover{border-color:var(--teal);color:var(--teal)}
+.sd-btn.active{background:var(--teal-bg);border-color:var(--teal);color:var(--teal)}
+.sd-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(200px,1fr));gap:6px}
+.sd-chip{padding:8px 12px;background:var(--bg);border:1px solid var(--border);border-radius:6px;font-size:11px;cursor:pointer;transition:all .15s;font-family:var(--mono);display:flex;align-items:center;gap:8px}
+.sd-chip:hover{border-color:var(--teal);background:rgba(77,201,212,.04)}
+.sd-chip.selected{border-color:var(--teal);background:rgba(77,201,212,.08)}
+.sd-chip .sd-name{color:var(--text);font-weight:500;flex:1}
+.sd-chip .sd-cat{font-size:9px;padding:2px 6px;border-radius:3px;text-transform:uppercase;letter-spacing:.5px}
+.sd-cat.ops{background:rgba(229,165,75,.1);color:var(--amber)}
+.sd-cat.content{background:rgba(167,139,250,.1);color:var(--purple)}
+.sd-cat.design{background:rgba(167,139,250,.1);color:#c084fc}
+.sd-cat.crm{background:rgba(59,130,246,.1);color:var(--blue)}
+.sd-cat.context{background:rgba(248,81,73,.1);color:var(--red)}
+.sd-cat.personal{background:rgba(63,185,80,.1);color:var(--green)}
+.sd-detail{margin-top:12px;background:var(--bg);border:1px solid var(--teal);border-radius:var(--radius);padding:16px;font-size:12px;color:var(--text2);line-height:1.7}
+.sd-detail h4{font-size:14px;color:var(--teal);margin-bottom:6px;font-family:var(--mono)}
+.sd-detail .sd-desc{margin-bottom:8px}
+.sd-detail .sd-meta{font-size:10px;color:var(--text3);display:flex;gap:12px;flex-wrap:wrap}
+/* Setup Guide */
+.setup-guide{padding:16px 32px 24px;border-top:1px solid var(--border)}
+.setup-guide h3{font-size:14px;color:var(--text2);margin-bottom:12px;display:flex;align-items:center;gap:8px}
+.guide-phases{display:flex;flex-direction:column;gap:8px}
+.guide-phase{background:var(--bg);border:1px solid var(--border);border-radius:var(--radius);padding:16px;cursor:pointer;transition:all .15s;border-left:3px solid var(--border)}
+.guide-phase:hover{border-color:var(--border2)}
+.guide-phase.expanded{border-left-color:var(--teal);background:rgba(77,201,212,.03)}
+.guide-phase-header{display:flex;align-items:center;gap:12px}
+.guide-phase-num{font-family:var(--mono);font-size:16px;font-weight:700;min-width:28px;color:var(--teal)}
+.guide-phase-title{font-size:13px;font-weight:600;color:var(--text);flex:1}
+.guide-phase-time{font-size:10px;color:var(--text3);font-family:var(--mono)}
+.guide-phase-body{display:none;margin-top:12px;padding-top:12px;border-top:1px solid var(--border);font-size:12px;color:var(--text2);line-height:1.8;white-space:pre-line}
 
 /* ── Node Graph ── */
 .node-graph-section{padding:16px 32px 24px;border-top:1px solid var(--border)}
@@ -471,6 +508,32 @@ body{background:var(--bg);color:var(--text);font-family:var(--mono);line-height:
       </div>
     </div>
 
+    <!-- All Skills Dashboard -->
+    <div class="skills-dashboard" id="skills-dashboard">
+      <h3><span style="color:var(--teal)">&equiv;</span> All Skills &mdash; 50+ Commands</h3>
+      <div class="sd-controls">
+        <button class="sd-btn active" onclick="filterSkills('all')">All</button>
+        <button class="sd-btn" onclick="filterSkills('ops')">Ops</button>
+        <button class="sd-btn" onclick="filterSkills('content')">Content</button>
+        <button class="sd-btn" onclick="filterSkills('design')">Design</button>
+        <button class="sd-btn" onclick="filterSkills('crm')">CRM/Team</button>
+        <button class="sd-btn" onclick="filterSkills('context')">Context</button>
+        <button class="sd-btn" onclick="filterSkills('personal')">Personal</button>
+      </div>
+      <div class="sd-grid" id="sd-grid"></div>
+      <div class="sd-detail" id="sd-detail" style="display:none"></div>
+    </div>
+
+    <!-- POS Setup Guide -->
+    <div class="setup-guide" id="setup-guide">
+      <h3><span style="color:var(--green)">&gt;_</span> POS Setup &mdash; Architecture Guide</h3>
+      <div class="guide-intro" style="font-size:12px;color:var(--text2);margin-bottom:16px;line-height:1.7">
+        From zero to working Personal Operating System. Each phase builds on the previous one.<br>
+        <strong style="color:var(--teal)">Principle:</strong> don't add complexity until you feel the need.
+      </div>
+      <div class="guide-phases" id="guide-phases"></div>
+    </div>
+
     <!-- Concepts (original section) -->
     <div class="concepts">
       <h3><span style="color:var(--amber)">#</span> Core Concepts &rarr; POS Mapping</h3>
@@ -506,6 +569,16 @@ body{background:var(--bg);color:var(--text);font-family:var(--mono);line-height:
           <a href="#naming-section">Naming Convention</a>
           <p>Interactive file naming formatter. Type a description, get a properly formatted filename.</p>
           <div class="deeplink-url">#naming-section</div>
+        </div>
+        <div class="deeplink-card">
+          <a href="#skills-dashboard">All Skills (50+)</a>
+          <p>Filterable dashboard of all 50+ skills organized by department. Click any skill for details.</p>
+          <div class="deeplink-url">#skills-dashboard</div>
+        </div>
+        <div class="deeplink-card">
+          <a href="#setup-guide">POS Setup Guide</a>
+          <p>7-phase architecture guide: from input layer to team OS. Expandable steps with commands.</p>
+          <div class="deeplink-url">#setup-guide</div>
         </div>
         <div class="deeplink-card">
           <a href="https://keyboard.aimindset.org" target="_blank">keyboard.aimindset.org</a>
@@ -1522,11 +1595,237 @@ function escapeHtml(str) {
   return str.replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;');
 }
 
+// ─── SKILLS DASHBOARD ────────────────────────────────────────────────────────
+
+const ALL_SKILLS = [
+  // Ops
+  { name: '/daily-focus', cat: 'ops', desc: 'Morning focus + SVG metaphor \u2192 Telegram #focus. 4 MCP sources, ~15 seconds.' },
+  { name: '/pos-morning', cat: 'ops', desc: 'Full morning stack: calendar + tasks + sessions + vault \u2192 ONE focus sentence.' },
+  { name: '/vox', cat: 'ops', desc: 'Terminal day advisor. Fetches full context (focus, calendar, Linear, meetings) \u2192 actionable priorities.' },
+  { name: '/calendar', cat: 'ops', desc: 'Google Calendar events for today or week. Automatic fallback to macOS Calendar.app.' },
+  { name: '/linear-action', cat: 'ops', desc: 'Update, close, comment, reassign, create Linear tasks directly from terminal.' },
+  { name: '/focus', cat: 'ops', desc: 'Focus session coaching with real Focus Ship integration + Raycast Bridge.' },
+  { name: '/focus-ship-sprint', cat: 'ops', desc: 'Parallel work lanes via tmux. Solo or as agent team with independent lanes.' },
+  { name: '/remind', cat: 'ops', desc: 'Defer current session and create reminder for continuation. Format: /remind [time] [prompt].' },
+  // Content
+  { name: '/content-voice', cat: 'content', desc: '5 tones: partner, public, internal, gonzo, content. Human-sounding Russian text.' },
+  { name: '/reel-edit', cat: 'content', desc: 'Instagram Reels from raw video: transcribe, smart cut, overlay, JetBrains Mono subtitles, audio processing.' },
+  { name: '/reel-block-edit', cat: 'content', desc: 'Visual block editor for reels. HTML timeline, segment swap/reorder, labeled Whisper blocks.' },
+  { name: '/research', cat: 'content', desc: 'Deep parallel research via 5 Exa sub-agents. Presets: video, competitor, edtech, product, market.' },
+  { name: '/infocompressor', cat: 'content', desc: 'Compress text with 100% information preservation. Triggers: compress, cheat sheet, dense summary.' },
+  { name: '/intro', cat: 'content', desc: 'Generate intro messages for Telegram chats and communities. Adaptive format per channel context.' },
+  { name: '/ambient-advisor', cat: 'content', desc: 'Background Exa research on session topic. Auto-triggers on strategic/multi-step questions.' },
+  // Design
+  { name: '/imagine', cat: 'design', desc: 'Image generation via OpenRouter API. Models: Nano Banana, GPT-5, Flux, Seedream, Riverflow.' },
+  { name: '/AIM-imagine', cat: 'design', desc: 'Generate images in AI Mindset Brand Bible style (Analogue Constructivism).' },
+  { name: '/AIM-cover-gen', cat: 'design', desc: 'Animated video covers for Zoom waiting rooms, call waiting screens, branded loading animations.' },
+  { name: '/visual-pipeline', cat: 'design', desc: 'Full creative pipeline: references \u2192 Design DNA \u2192 Design Code \u2192 artifacts (SVG, cards, presentations).' },
+  { name: '/style-bible', cat: 'design', desc: 'Analyze visual taste. Drop an image \u2192 get aesthetic DNA analysis + entry in Style Bible.' },
+  { name: '/excalidraw', cat: 'design', desc: 'Generate Excalidraw diagrams (kanban, ecosystem, mindmap, timeline, flowchart) \u2192 save to Obsidian.' },
+  { name: '/video-art', cat: 'design', desc: 'GPU shaders, face/hand tracking, sound reactive, projections. Idea \u2192 interactive art object.' },
+  // CRM/Team
+  { name: '/AIM-crm', cat: 'crm', desc: 'AI Mindset CRM: partners, offers, dashboard. Full partner lifecycle in terminal.' },
+  { name: '/AIM-curator', cat: 'crm', desc: 'Curator tracking: outreach, onboarding, activity dashboard for AI Mindset Labs.' },
+  { name: '/AIM-lab', cat: 'crm', desc: 'Lab hub: chat monitoring, participant replies, weekly digest, feedback collection, audience analysis.' },
+  { name: '/AIM-pm', cat: 'crm', desc: 'Team process manager: review, sync, summary, task tracking across AI Mindset team.' },
+  { name: '/AIM-weekly-sync', cat: 'crm', desc: 'Comprehensive syncs: weekly, product, marketing, partnerships, personal \u2014 all formats.' },
+  { name: '/AIM-content-voice', cat: 'crm', desc: 'Channel posts, announcements, gonzo series, Substack digests, partner follow-ups, promo content.' },
+  { name: '/telegram', cat: 'crm', desc: 'Send messages, photos, files to Telegram via MTProto (Telethon). Direct channel access.' },
+  { name: '/meeting-summary', cat: 'crm', desc: 'Transcript \u2192 enriched summary + action items split by responsible \u2192 Telegram.' },
+  // Context
+  { name: '/context-compact', cat: 'context', desc: 'Handoff generation when context > 70%. Saves progress to files + generates continuation prompt.' },
+  { name: '/eval', cat: 'context', desc: 'Self-evaluation: binary T/R/C rubric. Text quality, rule adherence, code correctness.' },
+  { name: '/reflect', cat: 'context', desc: 'Periodic analysis of accumulated evals. Detect error patterns \u2192 generate CLAUDE.md rules.' },
+  { name: '/pos-audit', cat: 'context', desc: 'Scan POS infrastructure: CLAUDE.md, skills, MCP, memory, hooks, settings. Score 0-12.' },
+  { name: '/pos-dashboard-gen', cat: 'context', desc: 'Generate personal HTML dashboard from POS context. Terminal aesthetic, single-file.' },
+  { name: '/pos-mission-control', cat: 'context', desc: 'Unified workflow: audit infrastructure, map MCP channels, route pipelines (audit/morning/dashboard).' },
+  { name: '/pos-skill-factory', cat: 'context', desc: 'Create production-quality skills from description. 4 template patterns, quality validation.' },
+  { name: '/vault-cleanup', cat: 'context', desc: 'Scan Obsidian vault for bloat. Move junk to quarantine. Never deletes permanently.' },
+  { name: '/sessions', cat: 'context', desc: 'Show recent Claude Code sessions with descriptions. Period filter: today/week/month.' },
+  { name: '/history', cat: 'context', desc: 'Full Claude Code session history from ~/.claude/projects/ with metadata.' },
+  // Personal
+  { name: '/daily-metaphor', cat: 'personal', desc: 'Generate personalized SVG visual metaphor based on daily focus energy and theme.' },
+  { name: '/daily-story', cat: 'personal', desc: 'Visual day narrative: animated SVG metaphors forming a story of the day.' },
+  { name: '/undone', cat: 'personal', desc: 'Analyze undone items from messages, calendar, personal time windows. Manifesto of Not-Doing.' },
+  { name: '/ceo-council', cat: 'personal', desc: 'Parallel Opus sub-agents as isolated C-level experts. Strategic analysis from multiple perspectives.' },
+  { name: '/os-mind', cat: 'personal', desc: '1-minute attention practice using real tasks as prompts. Context router for micro-focus.' },
+];
+
+let currentSkillFilter = 'all';
+
+function renderSkillsDashboard() {
+  const grid = document.getElementById('sd-grid');
+  const filtered = currentSkillFilter === 'all' ? ALL_SKILLS : ALL_SKILLS.filter(s => s.cat === currentSkillFilter);
+  grid.innerHTML = filtered.map((s, i) => `
+    <div class="sd-chip" onclick="showSkillDetail(${ALL_SKILLS.indexOf(s)})">
+      <span class="sd-name">${s.name}</span>
+      <span class="sd-cat ${s.cat}">${s.cat}</span>
+    </div>
+  `).join('');
+  document.getElementById('sd-detail').style.display = 'none';
+}
+
+function filterSkills(cat) {
+  currentSkillFilter = cat;
+  document.querySelectorAll('.sd-btn').forEach(b => b.classList.toggle('active', b.textContent.toLowerCase().replace('/','').includes(cat) || (cat === 'all' && b.textContent === 'All')));
+  renderSkillsDashboard();
+}
+
+function showSkillDetail(i) {
+  const s = ALL_SKILLS[i];
+  const detail = document.getElementById('sd-detail');
+  document.querySelectorAll('.sd-chip').forEach((c, idx) => c.classList.toggle('selected', ALL_SKILLS.indexOf(ALL_SKILLS.filter(sk => currentSkillFilter === 'all' || sk.cat === currentSkillFilter)[idx]) === i));
+  detail.style.display = 'block';
+  detail.innerHTML = `<h4>${s.name}</h4><div class="sd-desc">${s.desc}</div><div class="sd-meta"><span>category: <strong>${s.cat}</strong></span><span>type: skill</span><span>runtime: Claude Code / CoWork</span></div>`;
+}
+
+// ─── SETUP GUIDE ─────────────────────────────────────────────────────────────
+
+const SETUP_PHASES = [
+  {
+    num: '0',
+    title: 'Input Layer \u2014 Reduce Friction to Zero',
+    time: '30 min',
+    body: `Before AI, before tools \u2014 physical input.
+
+\u2022 keyboard.aimindset.org \u2014 shortcuts, speed layout, key repeat
+\u2022 Raycast \u2014 Cmd+Space \u2192 type \u2192 answer. Zero apps, zero tabs
+\u2022 WISPR Flow (wisprflow.com) \u2014 voice dictation to any field on Mac
+\u2022 Krisp \u2014 call transcript + action items + MCP server
+
+"If you think for 3 minutes whether to type something \u2014 you\u2019re not experimenting."`
+  },
+  {
+    num: '1',
+    title: 'Install Claude Code + Create CLAUDE.md',
+    time: '15 min',
+    body: `npm install -g @anthropic-ai/claude-code
+mkdir ~/my-pos && cd ~/my-pos
+claude
+
+First command: "create CLAUDE.md with my context \u2014 I am [who], my company [what]"
+
+CLAUDE.md = /etc/ of your operating system.
+It runs on EVERY session. More important than any single prompt.
+
+\u2022 3\u20135 rules about how agent should behave
+\u2022 Naming convention reference
+\u2022 Active projects list
+\u2022 File and folder rules
+
+Alternative: CoWork (visual UI, same skills, no terminal needed)`
+  },
+  {
+    num: '2',
+    title: 'Naming Convention \u2014 Data Layer Foundation',
+    time: '10 min',
+    body: `Format: {project} {type} description \u2013 YYYY-MM-DD.md
+
+Without naming, agent is blind. It can\u2019t distinguish research from transcript without opening every file.
+
+\u2022 Choose 3 project codes: {startup}, {self}, {channel}
+\u2022 Choose 5 types: {research}, {guide}, {plan}, {rule}, {meeting}
+\u2022 Put convention in CLAUDE.md \u2192 agent follows automatically
+
+Interactive builder: ainative-lab/naming.html#builder
+Full guide: ainative-lab/naming.html (14 sections, vault structure, YAML)`
+  },
+  {
+    num: '3',
+    title: 'First Skill \u2014 From Repeated Action to Executable',
+    time: '15 min',
+    body: `mkdir -p .claude/skills
+
+Skill = not code. It\u2019s text of your experience, written as instruction.
+
+Start with one of these:
+\u2022 /meeting-summary \u2014 transcript \u2192 structured summary + action items
+\u2022 /morning-brief \u2014 calendar + tasks + 3 focus priorities
+\u2022 /draft-message \u2014 message draft in your communication style
+
+Skill file = markdown with frontmatter:
+  name, description, then numbered steps.
+
+Run: /skill-name \u2192 see result \u2192 iterate.
+"Skill is a living document. Fix what you don\u2019t like."`
+  },
+  {
+    num: '4',
+    title: '3 Processes + Autonomy Map L0\u2013L3',
+    time: '10 min',
+    body: `Write 3 processes you do every day that are painful or repetitive.
+Map each to an autonomy level:
+
+L0: Human does, AI suggests (negotiations, budget)
+L1: AI drafts, human approves (emails, code review)
+L2: AI executes, human monitors (outreach, summaries)
+L3: Autopilot, escalation only (CI/CD, monitoring)
+
+For each process: what level NOW? what level is POSSIBLE this week?
+
+"Your task: identify where judgment is necessary, automate everything else."`
+  },
+  {
+    num: '5',
+    title: 'Awareness System \u2014 Dashboard as Mirror',
+    time: '20 min',
+    body: `4 layers, no plugins needed:
+
+Layer 1: Status Line \u2014 context %, mode symbol (bash script)
+Layer 2: Footer Protocol \u2014 agent reports status in every response (CLAUDE.md rule)
+Layer 3: Awareness Layer \u2014 Linear tasks in context (hook script on session start)
+Layer 4: Mission Control \u2014 CTRL dashboard (Python + JSON + iTerm2)
+
+"Pilot has instrument panel. Height, speed, fuel. You don\u2019t think about instruments until warning lights up."
+
+Dashboard = visualization of your token stream.
+Each block was once a skill and still is.
+Run /pos-dashboard-gen to generate yours.`
+  },
+  {
+    num: '6',
+    title: 'Scale \u2014 From POS to Team OS',
+    time: 'ongoing',
+    body: `When your POS works for you \u2192 extend to team:
+
+\u2022 Shared Vault (Obsidian Sync) \u2014 team knowledge base
+\u2022 Role Cards (Org/HR/roles/) \u2014 who does what
+\u2022 Linear Integration \u2014 shared task tracking
+\u2022 Communication Rules \u2014 tone, channels, naming
+\u2022 Team Skills (symlinked) \u2014 shared across members
+
+"POS \u2192 Team OS \u2192 Company OS.
+Start with 1 person, 3 skills. Scale from there."`
+  }
+];
+
+function renderSetupGuide() {
+  const container = document.getElementById('guide-phases');
+  container.innerHTML = SETUP_PHASES.map((p, i) => `
+    <div class="guide-phase" onclick="toggleGuidePhase(this)">
+      <div class="guide-phase-header">
+        <div class="guide-phase-num">${p.num}</div>
+        <div class="guide-phase-title">${p.title}</div>
+        <div class="guide-phase-time">${p.time}</div>
+      </div>
+      <div class="guide-phase-body">${escapeHtml(p.body)}</div>
+    </div>
+  `).join('');
+}
+
+function toggleGuidePhase(el) {
+  el.classList.toggle('expanded');
+  const body = el.querySelector('.guide-phase-body');
+  body.style.display = el.classList.contains('expanded') ? 'block' : 'none';
+}
+
 // ─── INIT ───────────────────────────────────────────────────────────────────
 
 renderSidebar();
 renderConcepts();
 renderPipelineConcepts();
+renderSkillsDashboard();
+renderSetupGuide();
 selectLayer('infra');
 setPreset('advanced');
 updateNaming();
