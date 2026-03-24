@@ -9,6 +9,7 @@
 <meta property="og:type" content="website">
 <meta property="og:url" content="https://ai-mindset-org.github.io/pos-stack-explorer/">
 <meta name="twitter:card" content="summary_large_image">
+<link rel="icon" type="image/svg+xml" href="logo.svg">
 <style>
 *,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
 :root{
@@ -156,7 +157,9 @@ body{background:var(--bg);color:var(--text);font-family:var(--mono);line-height:
   .content{max-height:none;padding:16px}
   .components-grid{grid-template-columns:1fr}
   .concepts-grid{grid-template-columns:1fr}
-  .header,.presets,.concepts,.prompt-section,.footer,.naming-section,.node-graph-section,.l01-concepts-section,.deeplinks-section{padding-left:16px;padding-right:16px}
+  .pipeline-grid{grid-template-columns:1fr}
+  .dept-grid{grid-template-columns:1fr 1fr}
+  .header,.presets,.concepts,.prompt-section,.footer,.naming-section,.node-graph-section,.pipeline-section,.deeplinks-section{padding-left:16px;padding-right:16px}
 }
 
 /* Status indicators */
@@ -174,19 +177,31 @@ body{background:var(--bg);color:var(--text);font-family:var(--mono);line-height:
 .bg-people{background:rgba(247,120,186,.1);border-color:rgba(247,120,186,.3)}
 .bg-gov{background:rgba(77,201,212,.1);border-color:rgba(77,201,212,.3)}
 
-/* ── L01 Concepts Section ── */
-.l01-concepts-section{padding:16px 32px 24px;border-top:1px solid var(--border)}
-.l01-concepts-section h3{font-size:14px;color:var(--text2);margin-bottom:16px;display:flex;align-items:center;gap:8px}
-.l01-card{background:var(--bg);border:1px solid var(--border);border-radius:var(--radius);padding:16px;cursor:pointer;transition:var(--transition)}
-.l01-card:hover{border-color:var(--amber);background:rgba(229,165,75,.05)}
-.l01-card.expanded{border-color:var(--amber);background:rgba(229,165,75,.05)}
-.l01-slide{font-size:10px;color:var(--text3);display:inline-block;padding:2px 8px;border:1px solid var(--border);border-radius:10px;margin-bottom:8px}
-.l01-card-title{font-size:13px;font-weight:600;margin-bottom:4px;color:var(--text)}
-.l01-card-quote{font-size:12px;color:var(--amber);font-style:italic;margin-bottom:6px}
-.l01-card-body{font-size:11px;color:var(--text2);line-height:1.6;display:none}
-.l01-card.expanded .l01-card-body{display:block;margin-top:10px;padding-top:10px;border-top:1px solid var(--border)}
-.l01-card-link{font-size:11px;color:var(--teal);margin-top:6px;display:block;text-decoration:none}
-.l01-card-link:hover{text-decoration:underline}
+/* ── Pipeline Section ── */
+/* Pipeline section */
+.pipeline-section{padding:16px 32px 24px;border-top:1px solid var(--border)}
+.pipeline-section h3{font-size:14px;color:var(--text2);margin-bottom:16px;display:flex;align-items:center;gap:8px}
+.pipeline-flow{display:flex;align-items:center;gap:0;margin:0 0 20px;flex-wrap:wrap;justify-content:center}
+.pipe-node{background:var(--bg);border:1px solid var(--border);padding:10px 20px;font-size:12px;color:var(--text2);border-radius:var(--radius);font-family:var(--mono)}
+.pipe-node.pipe-hl{border-color:var(--amber);color:var(--amber);background:rgba(229,165,75,.08)}
+.pipe-node.pipe-hl2{border-color:var(--teal);color:var(--teal);background:rgba(77,201,212,.08)}
+.pipe-arrow{color:var(--text3);font-size:18px;margin:0 6px}
+.pipeline-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(280px,1fr));gap:10px;margin-bottom:20px}
+.pipe-card{background:var(--bg);border:1px solid var(--border);border-radius:var(--radius);padding:16px;cursor:pointer;transition:var(--transition)}
+.pipe-card:hover{border-color:var(--teal);background:rgba(77,201,212,.04)}
+.pipe-card.expanded{border-color:var(--teal);background:rgba(77,201,212,.04)}
+.pipe-card-tag{font-size:10px;color:var(--text3);display:inline-block;padding:2px 8px;border:1px solid var(--border);border-radius:10px;margin-bottom:8px}
+.pipe-card-title{font-size:13px;font-weight:600;margin-bottom:4px;color:var(--text)}
+.pipe-card-quote{font-size:12px;color:var(--teal);font-style:italic;margin-bottom:6px}
+.pipe-card-body{font-size:11px;color:var(--text2);line-height:1.6;display:none;white-space:pre-line}
+.pipe-card.expanded .pipe-card-body{display:block;margin-top:10px;padding-top:10px;border-top:1px solid var(--border)}
+.pipeline-departments{border-top:1px solid var(--border);padding-top:16px;margin-top:8px}
+.dept-grid{display:grid;grid-template-columns:repeat(5,1fr);gap:10px}
+.dept-card{background:var(--bg);border:1px solid var(--border);border-radius:var(--radius);padding:14px;text-align:center;transition:var(--transition)}
+.dept-card:hover{background:var(--bg2)}
+.dept-icon{font-size:20px;font-weight:200;margin-bottom:6px}
+.dept-name{font-size:12px;font-weight:600;color:var(--text);margin-bottom:6px}
+.dept-skills{font-size:10px;color:var(--text3);line-height:1.6}
 
 /* ── Node Graph ── */
 .node-graph-section{padding:16px 32px 24px;border-top:1px solid var(--border)}
@@ -248,16 +263,19 @@ body{background:var(--bg);color:var(--text);font-family:var(--mono);line-height:
     <!-- Header -->
     <div class="header">
       <div class="header-top">
-        <h1><span>&gt;</span> Personal Operating System <span>|</span> Stack Explorer</h1>
+        <div style="display:flex;align-items:center;gap:14px">
+          <img src="logo.png" alt="AI Mindset" style="width:32px;height:32px;border-radius:6px;opacity:.85">
+          <h1><span>&gt;</span> Personal Operating System <span>|</span> Stack Explorer</h1>
+        </div>
         <div class="header-badge">
           <div class="dot"></div>
-          <span>L02 &middot; AI-Native Sprint &middot; 211 participants</span>
+          <span>POS Setup &middot; AI-Native Sprint</span>
         </div>
       </div>
       <p class="header-sub">
         Interactive explorer of a <strong>production POS</strong> running on Claude Code, CoWork &amp; Obsidian.
         Click layers to explore. Pick a preset to see what matters at each stage.
-        Yesterday Stepan showed <strong>why</strong> (79 slides, Shopify to L0-L3) &mdash; today we build <strong>how</strong>.
+        <strong>CLAUDE.md = /etc/</strong> &middot; <strong>Skills = executables</strong> &middot; <strong>MCP = drivers</strong>
       </p>
     </div>
 
@@ -284,10 +302,51 @@ body{background:var(--bg);color:var(--text);font-family:var(--mono);line-height:
       </div>
     </div>
 
-    <!-- L01 Concepts (expandable cards from Stepan's lecture) -->
-    <div class="l01-concepts-section" id="l01-section">
-      <h3><span style="color:var(--amber)">#</span> L01 Concepts &mdash; Stepan's Lecture &rarr; POS Mapping</h3>
-      <div class="concepts-grid" id="l01-concepts-grid"></div>
+    <!-- Skills Pipeline -->
+    <div class="pipeline-section" id="pipeline-section">
+      <h3><span style="color:var(--amber)">&gt;</span> Skills Pipeline &mdash; From Routine to Operating System</h3>
+      <div class="pipeline-flow">
+        <div class="pipe-node">Routine</div>
+        <div class="pipe-arrow">&rarr;</div>
+        <div class="pipe-node">Instruction</div>
+        <div class="pipe-arrow">&rarr;</div>
+        <div class="pipe-node pipe-hl">Skill</div>
+        <div class="pipe-arrow">&rarr;</div>
+        <div class="pipe-node">Pipeline</div>
+        <div class="pipe-arrow">&rarr;</div>
+        <div class="pipe-node pipe-hl2">POS</div>
+      </div>
+      <div class="pipeline-grid" id="pipeline-grid"></div>
+      <div class="pipeline-departments">
+        <h4 style="font-size:12px;color:var(--text3);margin-bottom:12px;text-transform:uppercase;letter-spacing:1px">5 Departments &mdash; One Terminal</h4>
+        <div class="dept-grid">
+          <div class="dept-card" style="border-color:rgba(167,139,250,.3)">
+            <div class="dept-icon" style="color:var(--purple)">D</div>
+            <div class="dept-name">Design</div>
+            <div class="dept-skills">og-covers &middot; carousels &middot; visual pipeline &middot; imagine &middot; style-bible</div>
+          </div>
+          <div class="dept-card" style="border-color:rgba(63,185,80,.3)">
+            <div class="dept-icon" style="color:var(--green)">C</div>
+            <div class="dept-name">Content</div>
+            <div class="dept-skills">content-voice &middot; reel-edit &middot; imagine &middot; research &middot; infocompressor</div>
+          </div>
+          <div class="dept-card" style="border-color:rgba(229,165,75,.3)">
+            <div class="dept-icon" style="color:var(--amber)">R</div>
+            <div class="dept-name">CRM</div>
+            <div class="dept-skills">AIM-crm &middot; AIM-curator &middot; intro &middot; telegram &middot; meeting-summary</div>
+          </div>
+          <div class="dept-card" style="border-color:rgba(59,130,246,.3)">
+            <div class="dept-icon" style="color:var(--blue)">O</div>
+            <div class="dept-name">Ops</div>
+            <div class="dept-skills">daily-focus &middot; pos-morning &middot; vox &middot; linear-action &middot; calendar</div>
+          </div>
+          <div class="dept-card" style="border-color:rgba(248,81,73,.3)">
+            <div class="dept-icon" style="color:var(--red)">X</div>
+            <div class="dept-name">Context</div>
+            <div class="dept-skills">CLAUDE.md &middot; memory/ &middot; evals &middot; context-compact &middot; linear-awareness</div>
+          </div>
+        </div>
+      </div>
     </div>
 
     <!-- Node Graph: Skills <-> MCP connections -->
@@ -312,6 +371,11 @@ body{background:var(--bg);color:var(--text);font-family:var(--mono);line-height:
     <!-- Naming Convention interactive -->
     <div class="naming-section" id="naming-section">
       <h3><span style="color:var(--amber)">&lowast;</span> Naming Convention &mdash; Interactive Formatter</h3>
+      <div style="background:rgba(229,165,75,.05);border:1px solid rgba(229,165,75,.15);border-radius:var(--radius);padding:12px 16px;margin-bottom:14px;font-size:12px;color:var(--text2);line-height:1.7">
+        <strong style="color:var(--amber)">Without naming, agent is blind.</strong>
+        AI-agent searches vault by patterns: <code style="color:var(--teal);background:var(--bg);padding:1px 5px;border-radius:3px;font-size:11px">glob("*{research}*")</code>, <code style="color:var(--teal);background:var(--bg);padding:1px 5px;border-radius:3px;font-size:11px">grep("{startup}")</code>.
+        The name IS the API. &rarr; <a href="https://ai-mindset-org.github.io/ainative-lab/naming.html" target="_blank" style="color:var(--teal);text-decoration:none">Full guide with 14 sections</a>
+      </div>
       <div class="naming-input-row">
         <div class="naming-field">
           <label>Project</label>
@@ -386,9 +450,9 @@ body{background:var(--bg);color:var(--text);font-family:var(--mono);line-height:
           <div class="deeplink-url">ai-mindset-org.github.io/ainative-deck/pos-setup.html</div>
         </div>
         <div class="deeplink-card">
-          <a href="#l01-section">L01 Concepts</a>
-          <p>Stepan's L01 lecture key concepts mapped to POS components. Expandable cards with slide references.</p>
-          <div class="deeplink-url">#l01-section</div>
+          <a href="#pipeline-section">Skills Pipeline</a>
+          <p>Routine &rarr; Instruction &rarr; Skill &rarr; Pipeline &rarr; POS. Five departments from one terminal.</p>
+          <div class="deeplink-url">#pipeline-section</div>
         </div>
         <div class="deeplink-card">
           <a href="#node-graph-section">Skills &harr; MCP Graph</a>
@@ -422,7 +486,7 @@ body{background:var(--bg);color:var(--text);font-family:var(--mono);line-height:
         </div>
         <div class="deeplink-card">
           <a href="https://ai-mindset-org.github.io/ainative-deck/pos-setup.html#1" target="_blank">Slide #1 &mdash; Intro</a>
-          <p>Opening slide. Link to L01, narrative bridge from yesterday.</p>
+          <p>Opening slide with narrative bridge and context.</p>
           <div class="deeplink-url">pos-setup.html#1</div>
         </div>
         <div class="deeplink-card">
@@ -435,7 +499,7 @@ body{background:var(--bg);color:var(--text);font-family:var(--mono);line-height:
 
     <!-- Footer -->
     <div class="footer">
-      <div class="footer-left">pos-stack-explorer v2.1 &middot; 2026-03-24 &middot; AI-Native Organizations Sprint</div>
+      <div class="footer-left">pos-stack-explorer v3.0 &middot; 2026-03-24 &middot; AI-Native Organizations Sprint</div>
       <div class="footer-right">
         <div class="footer-stat">layers: <span class="val" id="f-layers">6</span></div>
         <div class="footer-stat">components: <span class="val" id="f-components">0</span></div>
@@ -738,91 +802,55 @@ const CONCEPTS = [
   }
 ];
 
-// L01 Concepts data (from Stepan's lecture)
-const L01_CONCEPTS = [
+// Pipeline concepts data
+const PIPELINE_CONCEPTS = [
   {
-    slide: '#7',
-    title: 'POS \u2192 Team OS \u2192 Company OS',
-    quote: 'Start with 1 person, 3 skills. Scale from there.',
-    body: 'The maturity path is always personal first. You cannot build a Team OS without each member having a working POS.\n\nToday we build the first column: 1 person, 3 skills, 1 CLAUDE.md.\n\nTomorrow we bridge to team: shared vault, role cards, Linear integration.',
-    link: 'pos-setup.html#1'
+    tag: 'unix analogy',
+    title: 'CLAUDE.md = /etc/ \u2022 Skills = executables \u2022 MCP = drivers',
+    quote: 'Your POS is an operating system. Treat it like one.',
+    body: 'CLAUDE.md = /etc/ (system configuration)\nskills/ = /usr/bin/ (executable programs)\nMCP servers = device drivers (hardware access)\nmemory/ = /var/log/ (persistent state)\n\nYou don\u2019t rewrite /etc/ every boot.\nYou write it once, it runs every session.'
   },
   {
-    slide: '#8',
-    title: 'Dopamine / Cortisol Trap',
-    quote: 'METR: -19% speed, +20% perceived speed. You feel faster but you are slower.',
-    body: 'The trap: spending 3 hours prompting, feeling productive, shipping nothing.\n\nSolution: reduce friction to access (Raycast, voice input, keyboard shortcuts), but add structure to output (skills, evals, naming).\n\nkeyboard.aimindset.org \u2014 optimize input. Skills \u2014 optimize output.',
-    link: 'pos-setup.html#2'
+    tag: 'meta-skills',
+    title: '/morning \u2192 3 skills in 1 command',
+    quote: 'Meta-skill calls other skills. One command replaces 3 apps and 15 minutes.',
+    body: '/morning (meta-skill with 3 steps):\n  [1/3] /calendar \u2192 events from Google Calendar\n  [2/3] /linear-action \u2192 In Progress tasks\n  [3/3] /daily-focus \u2192 focus + visual metaphor \u2192 Telegram\n\n\u25b6 After 2 months you\u2019ll have 50 skills.\nSolution: meta-skills that chain them.\n\nSome skills deliberately slow down:\n  /daily-focus asks: "what\u2019s your energy level?"\n  /style-bible asks: "why did you like this?"'
   },
   {
-    slide: '#9',
-    title: 'Moat = Orchestrator',
-    quote: 'Your moat is not the model. Your moat is your context and rules.',
-    body: 'Everyone has access to the same models. The differentiator is:\n\n\u2022 Your data (15K+ notes in Obsidian)\n\u2022 Your rules (CLAUDE.md, naming convention)\n\u2022 Your memory (persistent patterns across sessions)\n\u2022 Your skills (50+ reusable specifications)\n\nThis is why we spend time on CLAUDE.md today \u2014 it is your competitive advantage.',
-    link: null
+    tag: '6T framework',
+    title: 'What to delegate: 6T Model',
+    quote: 'Tiny, Tedious, Time-consuming, Teachable, Terrible at, Time-sensitive.',
+    body: '1. Tiny \u2014 formatting, renaming, cleanup\n2. Tedious \u2014 sorting, classification, tagging\n3. Time-consuming \u2014 research, summaries, analysis\n4. Teachable \u2014 templates, recurring processes\n5. Terrible at \u2014 design, structure, code (for you)\n6. Time-sensitive \u2014 deadlines, follow-ups\n\nKey insight: work + work about work (meta-work).\nAutomate the meta-work first.'
   },
   {
-    slide: '#19',
-    title: 'Why Transformation Fails',
-    quote: '"Agent hallucinates" \u2192 no memory. "Unsafe" \u2192 no guardrails.',
-    body: 'Common complaints and their real causes:\n\n\u2022 "Agent hallucinates" \u2192 No memory, no validation rules\n\u2022 "It is unsafe" \u2192 No guardrails in CLAUDE.md\n\u2022 "Results are inconsistent" \u2192 No naming convention, no evals\n\u2022 "It does not understand my business" \u2192 No strategy in context\n\nYour CLAUDE.md is guardrails level 0. We build it today.',
-    link: null
+    tag: 'MCP vs Skills',
+    title: 'MCP = Resources \u2022 Skill = Processes',
+    quote: 'Skills are markdown. Portable across all agents.',
+    body: 'MCP = what agent CAN do (Calendar, Linear, Telegram)\nSkill = HOW agent should work (steps, rules, output)\n\nSkills are portable:\n  Claude Code \u2194 Codex\n  Cursor \u2194 ChatGPT\n\nGitHub = shared skill bank.\nYou create \u2192 upload \u2192 get others\u2019 skills.'
   },
   {
-    slide: '#54',
-    title: 'Agent = LLM + Harness',
-    quote: 'The harness is the system around the intelligence of the model.',
-    body: 'LLM = Opus 4.6 (the brain)\nHarness = everything else:\n\u2022 CLAUDE.md (operating manual)\n\u2022 skills/ (reusable specifications)\n\u2022 memory/ (persistent patterns)\n\u2022 MCP servers (Calendar, Linear, Telegram...)\n\u2022 Hooks (pre/post processing)\n\nToday you build your first harness. Claude Code is the runtime for it.',
-    link: 'pos-setup.html#5'
+    tag: 'autonomy L0\u2013L3',
+    title: 'Autonomy Map: where judgment is needed',
+    quote: 'Automate everything else.',
+    body: 'L0: Human does, AI suggests (negotiations, budget)\nL1: AI drafts, human approves (emails, code review)\nL2: AI executes, human monitors (outreach, coding)\nL3: Autopilot, escalation only (CI/CD, monitoring)\n\nExercise: pick 3 daily processes.\nMap current level. Set target level for this week.'
   },
   {
-    slide: '#56',
-    title: 'Harness Engineering',
-    quote: 'Prompt Engineering \u2192 Context Engineering \u2192 Harness Engineering. 2026 is agent harnesses.',
-    body: 'The evolution:\n\n2023: Prompt Engineering \u2014 craft the perfect prompt\n2024: Context Engineering \u2014 feed the right context\n2026: Harness Engineering \u2014 build the system\n\nCLAUDE.md is more important than any single prompt because it runs on every session. Skills are more important than prompts because they are reusable.',
-    link: null
+    tag: 'awareness system',
+    title: 'CLI Awareness \u2014 4 layers of control',
+    quote: 'No plugins. Bash scripts + JSON + markdown rules.',
+    body: 'Layer 1: Status Line \u2014 context %, mode symbol\nLayer 2: Footer \u2014 ctx + eval + linear in every response\nLayer 3: Awareness \u2014 Linear tasks, session tracking\nLayer 4: Mission Control \u2014 CTRL dashboard\n\nAll built from:\n\u2022 CLAUDE.md rules (footer format)\n\u2022 Hooks (pre/post processing)\n\u2022 Memory files (state persistence)\n\u2022 One Python dashboard script'
   },
   {
-    slide: '#58',
-    title: 'Model = Electricity, Harness = Engine',
-    quote: 'Your advantage: 1. Data. 2. Processes. 3. People.',
-    body: 'The model is commodity (like electricity).\nThe harness is your engine (unique to you).\n\nData = your Obsidian vault, your naming convention\nProcesses = your skills, your workflows\nPeople = your role cards, your communication rules\n\nWithout a harness, the model is a generic chatbot.\nWith a harness, it is YOUR operating system.',
-    link: null
+    tag: 'harness engineering',
+    title: 'Prompt \u2192 Context \u2192 Harness Engineering',
+    quote: '2026 is about agent harnesses, not models.',
+    body: '2023: Prompt Engineering \u2014 craft the perfect prompt\n2024: Context Engineering \u2014 feed the right context\n2026: Harness Engineering \u2014 build the system\n\nCLAUDE.md runs on EVERY session.\nSkills are reusable across projects.\nThe harness is your competitive advantage.'
   },
   {
-    slide: '#59',
-    title: 'What LLMs Cannot Do',
-    quote: '1. Define the goal. 2. Take responsibility.',
-    body: 'This is why your strategy, values, and rules matter.\n\nThe agent cannot decide your company direction.\nThe agent cannot be accountable for results.\n\nBut it CAN execute within guardrails you set.\nYour CLAUDE.md defines those guardrails.\nYour strategy document gives direction.\n\n"Convention = Agreement" \u2014 you agree on rules, agent follows them.',
-    link: 'pos-setup.html#4'
-  },
-  {
-    slide: '#61-63',
-    title: 'Autonomy Map L0\u2013L3',
-    quote: 'Your task: determine where judgment is necessary, and automate everything else.',
-    body: 'L0: Human does, AI suggests (negotiations, budget approval)\nL1: AI drafts, human approves (email draft, code review)\nL2: AI executes, human monitors (outreach, coding, fraud detection)\nL3: Autopilot, escalation by exception (CI/CD, monitoring, scoring)\n\nExercise: pick 3 processes, map current level, identify target level for this week.',
-    link: null
-  },
-  {
-    slide: '#68',
-    title: 'Executor \u2192 Architect',
-    quote: 'You do not write the report \u2014 you write the specification of the report.',
-    body: 'Old way: open ChatGPT, type prompt, get result, fix it, repeat.\nPOS way: write a skill (specification), run /skill-name, get consistent result.\n\nSkill = reusable specification:\n\u2022 Steps to follow\n\u2022 Rules to obey\n\u2022 Output format\n\u2022 Tools to invoke\n\nYou design the system once. It executes every time.',
-    link: 'pos-setup.html#6'
-  },
-  {
-    slide: '#73',
-    title: '6 Layers of AI-Native',
-    quote: 'Infrastructure \u2192 Data \u2192 Orchestration \u2192 Skills \u2192 People \u2192 Governance',
-    body: 'This playground shows all 6 layers of a production POS.\n\nUse the sidebar to explore each layer.\nUse presets to see what matters at each maturity stage.\n\nBeginner: L1-L2 (Infrastructure + Data)\nIntermediate: L1-L4 (add Orchestration + Skills)\nAdvanced: all 6 layers connected\nTeam: bridge from POS to Team OS',
-    link: null
-  },
-  {
-    slide: '#78',
-    title: 'Week 1 Goal',
-    quote: 'Claude Code installed + CLAUDE.md + 3 working skills + autonomy map.',
-    body: 'Homework:\n1. Install Claude Code, create CLAUDE.md\n2. 3 working skills in .claude/skills/\n3. 3 processes + L0-L3 autonomy map\n4. Download aim-skill: cybos.ai/aim-skill.zip\n5. Take the quiz: codos.ai/quiz\n6. (bonus) Vibe-code a SaaS you are paying for\n\nHow to submit: screenshot of working skill in chat (#support)',
-    link: null
+    tag: 'naming',
+    title: 'Without naming, agent is blind',
+    quote: '{project} {type} description \u2013 YYYY-MM-DD.md',
+    body: 'Agent searches by patterns:\n  glob("*{research}*") \u2192 all research docs\n  grep("{startup}") \u2192 all startup files\n\nWithout structured naming, agent reads every file.\nWith naming, the filename IS the API.\n\nConvention = agreement between you, team, and agents.\nPut it in CLAUDE.md \u2192 agents follow automatically.\n\n\u25b6 Full guide: ainative-lab/naming.html'
   }
 ];
 
@@ -1031,23 +1059,20 @@ function renderConcepts() {
   `).join('');
 }
 
-function renderL01Concepts() {
-  const grid = document.getElementById('l01-concepts-grid');
-  grid.innerHTML = L01_CONCEPTS.map((c, i) => `
-    <div class="l01-card" onclick="toggleL01Card(this)">
-      <div class="l01-slide">L01 slide ${c.slide}</div>
-      <div class="l01-card-title">${c.title}</div>
-      <div class="l01-card-quote">${c.quote}</div>
-      <div class="l01-card-body">
-        ${escapeHtml(c.body).replace(/\n/g, '<br>')}
-        ${c.link ? `<a class="l01-card-link" href="https://ai-mindset-org.github.io/ainative-deck/${c.link}" target="_blank">&nearr; Open in deck</a>` : ''}
-      </div>
+function renderPipelineConcepts() {
+  const grid = document.getElementById('pipeline-grid');
+  grid.innerHTML = PIPELINE_CONCEPTS.map((c, i) => `
+    <div class="pipe-card" onclick="togglePipeCard(this)">
+      <div class="pipe-card-tag">${c.tag}</div>
+      <div class="pipe-card-title">${c.title}</div>
+      <div class="pipe-card-quote">${c.quote}</div>
+      <div class="pipe-card-body">${escapeHtml(c.body)}</div>
     </div>
   `).join('');
 }
 
-function toggleL01Card(el) {
-  document.querySelectorAll('.l01-card').forEach(c => {
+function togglePipeCard(el) {
+  document.querySelectorAll('.pipe-card').forEach(c => {
     if (c !== el) c.classList.remove('expanded');
   });
   el.classList.toggle('expanded');
@@ -1418,7 +1443,7 @@ function escapeHtml(str) {
 
 renderSidebar();
 renderConcepts();
-renderL01Concepts();
+renderPipelineConcepts();
 selectLayer('infra');
 setPreset('advanced');
 updateNaming();
