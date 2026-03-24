@@ -202,6 +202,15 @@ body{background:var(--bg);color:var(--text);font-family:var(--mono);line-height:
 .dept-icon{font-size:20px;font-weight:200;margin-bottom:6px}
 .dept-name{font-size:12px;font-weight:600;color:var(--text);margin-bottom:6px}
 .dept-skills{font-size:10px;color:var(--text3);line-height:1.6}
+/* Pipeline flows */
+.pipeline-flows{margin-bottom:20px;background:var(--bg);border:1px solid var(--border);border-radius:var(--radius);padding:16px;overflow-x:auto}
+.pflow-label{font-size:10px;color:var(--text3);text-transform:uppercase;letter-spacing:1.5px;margin-bottom:4px;margin-top:10px}
+.pflow-label:first-child{margin-top:0}
+.pflow{display:flex;align-items:center;gap:4px;margin-bottom:6px;flex-wrap:wrap;font-size:11px;font-family:var(--mono)}
+.pf-src{padding:4px 10px;border:1px solid rgba(59,130,246,.3);border-radius:4px;color:var(--blue);background:rgba(59,130,246,.06)}
+.pf-skill{padding:4px 10px;border:1px solid rgba(77,201,212,.4);border-radius:4px;color:var(--teal);background:rgba(77,201,212,.08);font-weight:600}
+.pf-out{padding:4px 10px;border:1px solid rgba(229,165,75,.3);border-radius:4px;color:var(--amber);background:rgba(229,165,75,.06)}
+.pf-a{color:var(--text3);font-size:14px;margin:0 2px}
 
 /* ── Node Graph ── */
 .node-graph-section{padding:16px 32px 24px;border-top:1px solid var(--border)}
@@ -316,7 +325,27 @@ body{background:var(--bg);color:var(--text);font-family:var(--mono);line-height:
         <div class="pipe-arrow">&rarr;</div>
         <div class="pipe-node pipe-hl2">POS</div>
       </div>
+
+      <!-- Real pipeline flows -->
+      <div class="pipeline-flows">
+        <div class="pflow-label">Morning</div>
+        <div class="pflow"><span class="pf-src">Calendar</span><span class="pf-src">Linear</span><span class="pf-src">Journal</span><span class="pf-src">Memory</span><span class="pf-a">&rarr;</span><span class="pf-skill">/daily-focus</span><span class="pf-a">&rarr;</span><span class="pf-out">Focus + SVG</span><span class="pf-a">&rarr;</span><span class="pf-out">Telegram</span></div>
+
+        <div class="pflow-label">Planning</div>
+        <div class="pflow"><span class="pf-skill">/vox</span><span class="pf-a">&rarr;</span><span class="pf-src">MC Server</span><span class="pf-a">&rarr;</span><span class="pf-out">Priorities</span><span class="pf-a">&rarr;</span><span class="pf-skill">/AIM-pm</span><span class="pf-a">&rarr;</span><span class="pf-src">Linear MCP</span><span class="pf-a">&rarr;</span><span class="pf-out">Team sync</span></div>
+
+        <div class="pflow-label">Research</div>
+        <div class="pflow"><span class="pf-skill">/research</span><span class="pf-a">&rarr;</span><span class="pf-src">5&times; Exa agents</span><span class="pf-a">&rarr;</span><span class="pf-out">Research doc</span><span class="pf-a">&rarr;</span><span class="pf-skill">/infocompressor</span><span class="pf-a">&rarr;</span><span class="pf-out">Cheat sheet</span></div>
+
+        <div class="pflow-label">Context</div>
+        <div class="pflow"><span class="pf-skill">/eval</span><span class="pf-a">&rarr;</span><span class="pf-out">T/R/C</span><span class="pf-a">&rarr;</span><span class="pf-skill">/reflect</span><span class="pf-a">&rarr;</span><span class="pf-out">Improvements</span><span class="pf-a">&rarr;</span><span class="pf-skill">/context-compact</span><span class="pf-a">&rarr;</span><span class="pf-out">Handoff</span></div>
+
+        <div class="pflow-label">Generation</div>
+        <div class="pflow"><span class="pf-skill">/imagine</span><span class="pf-a">&rarr;</span><span class="pf-src">OpenRouter</span><span class="pf-a">&rarr;</span><span class="pf-out">PNG 2K</span><span class="pf-a">&rarr;</span><span class="pf-skill">/daily-metaphor</span><span class="pf-a">&rarr;</span><span class="pf-out">SVG</span><span class="pf-a">&rarr;</span><span class="pf-out">Telegram</span></div>
+      </div>
+
       <div class="pipeline-grid" id="pipeline-grid"></div>
+
       <div class="pipeline-departments">
         <h4 style="font-size:12px;color:var(--text3);margin-bottom:12px;text-transform:uppercase;letter-spacing:1px">5 Departments &mdash; One Terminal</h4>
         <div class="dept-grid">
@@ -346,6 +375,11 @@ body{background:var(--bg);color:var(--text);font-family:var(--mono);line-height:
             <div class="dept-skills">CLAUDE.md &middot; memory/ &middot; evals &middot; context-compact &middot; linear-awareness</div>
           </div>
         </div>
+      </div>
+
+      <div style="text-align:center;margin-top:16px;font-size:12px;color:var(--text3)">
+        Each skill = one block. Together = <span style="color:var(--teal)">operating system</span>.
+        &mdash; <span style="color:var(--amber)">50+ skills &middot; 9 MCP servers &middot; 5 departments</span>
       </div>
     </div>
 
