@@ -126,20 +126,23 @@ body{background:var(--bg);color:var(--text);font-family:var(--mono);line-height:
 .char-count{font-size:11px;color:var(--text3);margin-left:auto;font-family:var(--mono)}
 .char-count.over{color:var(--red)}
 
-/* Examples gallery */
-.examples-grid{display:grid;gap:10px;margin:24px 0}
-.example-card{background:var(--bg2);border:1px solid var(--border);border-radius:10px;padding:16px 18px;cursor:pointer;transition:all .2s;position:relative;overflow:hidden}
+/* Examples gallery — compact horizontal scroll */
+.examples-grid{display:flex;gap:10px;margin:24px 0;overflow-x:auto;padding-bottom:12px;scroll-snap-type:x mandatory;-webkit-overflow-scrolling:touch}
+.examples-grid::-webkit-scrollbar{height:4px}
+.examples-grid::-webkit-scrollbar-track{background:var(--bg2);border-radius:2px}
+.examples-grid::-webkit-scrollbar-thumb{background:var(--border2);border-radius:2px}
+.example-card{background:var(--bg2);border:1px solid var(--border);border-radius:10px;padding:12px 14px;cursor:pointer;transition:all .2s;position:relative;overflow:hidden;min-width:240px;max-width:280px;flex-shrink:0;scroll-snap-align:start}
 .example-card:hover{border-color:var(--teal);background:var(--bg3)}
 .example-card::before{content:'';position:absolute;left:0;top:0;bottom:0;width:3px;background:var(--teal);opacity:0;transition:opacity .2s}
 .example-card:hover::before{opacity:1}
-.example-label{font-size:10px;color:var(--text3);text-transform:uppercase;letter-spacing:1px;margin-bottom:8px;font-family:var(--mono)}
-.example-name{font-family:var(--code);font-size:13px;color:var(--text);word-break:break-all;line-height:1.6}
+.example-label{font-size:9px;color:var(--text3);text-transform:uppercase;letter-spacing:1px;margin-bottom:6px;font-family:var(--mono)}
+.example-name{font-family:var(--code);font-size:11px;color:var(--text);word-break:break-all;line-height:1.5}
 .example-name .ex-project{color:var(--blue)}
 .example-name .ex-type{color:var(--purple)}
 .example-name .ex-desc{color:var(--green)}
 .example-name .ex-date{color:var(--amber)}
 .example-name .ex-sep{color:var(--text3)}
-.example-hint{font-size:10px;color:var(--text-dim);margin-top:8px;font-family:var(--mono)}
+.example-hint{display:none}
 
 /* Rules section */
 .rule-cards{display:grid;gap:12px;margin:24px 0}
@@ -165,7 +168,8 @@ body{background:var(--bg);color:var(--text);font-family:var(--mono);line-height:
 .context-source{font-size:11px;color:var(--text3);font-family:var(--mono);letter-spacing:.3px}
 
 /* Types table */
-.types-grid{display:grid;grid-template-columns:1fr 1fr;gap:10px;margin:24px 0}
+.types-grid{display:grid;grid-template-columns:1fr 1fr 1fr;gap:10px;margin:24px 0}
+@media(max-width:900px){.types-grid{grid-template-columns:1fr 1fr}}
 @media(max-width:600px){.types-grid{grid-template-columns:1fr}}
 .type-group{background:var(--bg2);border:1px solid var(--border);border-radius:10px;padding:16px}
 .type-group h5{font-size:10px;color:var(--teal);text-transform:uppercase;letter-spacing:1.2px;margin-bottom:10px;font-family:var(--mono)}
@@ -320,6 +324,15 @@ body{background:var(--bg);color:var(--text);font-family:var(--mono);line-height:
               <option value="{action-plan}">{action-plan} -- action plan</option>
               <option value="{checklist}">{checklist} -- checklist</option>
             </optgroup>
+            <optgroup label="Business">
+              <option value="{proposal}">{proposal} -- proposal</option>
+              <option value="{brief}">{brief} -- creative/project brief</option>
+              <option value="{memo}">{memo} -- internal memo</option>
+              <option value="{review}">{review} -- review, assessment</option>
+              <option value="{invoice}">{invoice} -- invoice, billing</option>
+              <option value="{contract}">{contract} -- contract, agreement</option>
+              <option value="{pitch}">{pitch} -- pitch, presentation</option>
+            </optgroup>
             <optgroup label="Meta">
               <option value="{context}">{context} -- context doc</option>
               <option value="{role}">{role} -- role card</option>
@@ -449,6 +462,18 @@ body{background:var(--bg);color:var(--text);font-family:var(--mono);line-height:
         <li><span class="tcode">{checklist}</span><span class="tdesc">checklist, todo</span></li>
       </ul>
     </div>
+    <div class="type-group">
+      <h5>Business</h5>
+      <ul class="type-list">
+        <li><span class="tcode">{proposal}</span><span class="tdesc">proposal, offer</span></li>
+        <li><span class="tcode">{brief}</span><span class="tdesc">creative/project brief</span></li>
+        <li><span class="tcode">{memo}</span><span class="tdesc">internal memo</span></li>
+        <li><span class="tcode">{review}</span><span class="tdesc">review, assessment</span></li>
+        <li><span class="tcode">{invoice}</span><span class="tdesc">invoice, billing</span></li>
+        <li><span class="tcode">{contract}</span><span class="tdesc">agreement, contract</span></li>
+        <li><span class="tcode">{pitch}</span><span class="tdesc">pitch, presentation</span></li>
+      </ul>
+    </div>
   </div>
 </div>
 
@@ -558,6 +583,14 @@ body{background:var(--bg);color:var(--text);font-family:var(--mono);line-height:
   </div>
 </div>
 
+<!-- Download Cheatsheet -->
+<div class="section" style="text-align:center;padding-top:32px">
+  <button class="btn btn-teal" onclick="downloadCheatsheet()" style="font-size:14px;padding:12px 28px;cursor:pointer">
+    Download Naming Cheatsheet (.md)
+  </button>
+  <p style="font-size:11px;color:var(--text-dim);margin-top:8px">Markdown file with all types, projects, and rules</p>
+</div>
+
 <!-- Footer -->
 <div class="footer">
   <div class="footer-logo">AI <span>Mindset</span></div>
@@ -576,16 +609,22 @@ body{background:var(--bg);color:var(--text);font-family:var(--mono);line-height:
 const EXAMPLES = [
   { project: '{AIM}', type: '{research}', desc: 'market analysis Q2', date: '2026-03-24', label: 'Team research' },
   { project: '{AIM}', type: '{weekly-sync}', desc: '2026-W13', date: '2026-03-23', label: 'Weekly ritual' },
-  { project: '{AIM}', type: '{daily-focus}', desc: '2026-03-24 Monday', date: 'alex p', label: 'Daily focus (special format)', special: true },
-  { project: '{space}', type: '{guide}', desc: 'Obsidian vault setup for founders', date: '2026-03-20', label: 'Community guide' },
-  { project: '{w26}', type: '{demo}', desc: 'Claude Code workflow basics', date: '2026-02-10', label: 'Lab demo' },
-  { project: '{consulting}', type: '{summary}', desc: 'strategy session client A', date: '2026-03-15', label: 'Consulting summary' },
-  { project: '{channel}', type: '{article}', desc: 'AI agents in daily work', date: '2026-03-18', label: 'Channel article' },
+  { project: '{AIM}', type: '{daily-focus}', desc: '2026-03-24 Monday', date: 'alex p', label: 'Daily focus', special: true },
+  { project: '{space}', type: '{guide}', desc: 'Obsidian vault setup', date: '2026-03-20', label: 'Community guide' },
+  { project: '{w26}', type: '{demo}', desc: 'Claude Code basics', date: '2026-02-10', label: 'Lab demo' },
+  { project: '{consulting}', type: '{summary}', desc: 'strategy session', date: '2026-03-15', label: 'Consulting' },
+  { project: '{channel}', type: '{article}', desc: 'AI agents in daily work', date: '2026-03-18', label: 'Article' },
   { project: '{self}', type: '{plan}', desc: 'goals Q2 2026', date: '2026-03-10', label: 'Personal plan' },
   { project: '{AIM}', type: '{prd}', desc: 'Linear Awareness Layer', date: '2026-02-19', label: 'Product spec' },
-  { project: '{research}', type: '{analysis}', desc: 'AI tools market trends', date: '2026-03-22', label: 'Research analysis' },
-  { project: '', type: '{rule}', desc: 'file naming convention for Obsidian', date: '2026-03-24', label: 'Rule (no project)' },
-  { project: '{AIM}', type: '{retro}', desc: 'sprint 08 review', date: '2026-03-21', label: 'Retrospective' },
+  { project: '{research}', type: '{analysis}', desc: 'AI tools trends', date: '2026-03-22', label: 'Analysis' },
+  { project: '', type: '{rule}', desc: 'file naming for Obsidian', date: '2026-03-24', label: 'Rule' },
+  { project: '{AIM}', type: '{retro}', desc: 'sprint 08 review', date: '2026-03-21', label: 'Retro' },
+  { project: '{consulting}', type: '{proposal}', desc: 'AI integration pilot', date: '2026-03-20', label: 'Proposal' },
+  { project: '{AIM}', type: '{brief}', desc: 'sprint marketing', date: '2026-03-18', label: 'Brief' },
+  { project: '{consulting}', type: '{memo}', desc: 'team restructuring', date: '2026-03-15', label: 'Memo' },
+  { project: '{AIM}', type: '{review}', desc: 'Q1 performance', date: '2026-03-12', label: 'Review' },
+  { project: '{consulting}', type: '{report}', desc: 'automation audit', date: '2026-03-10', label: 'Report' },
+  { project: '{AIM}', type: '{pitch}', desc: 'investor update', date: '2026-03-08', label: 'Pitch' },
 ];
 
 function colorize(project, type, desc, date, special) {
@@ -729,6 +768,81 @@ document.querySelectorAll('.nav a[href^="#"]').forEach(a => {
     if (t) t.scrollIntoView({ behavior: 'smooth', block: 'start' });
   });
 });
+
+// Download cheatsheet
+function downloadCheatsheet() {
+  const content = `# Naming Convention Cheatsheet
+
+## Format
+{project} {type} description \u2013 YYYY-MM-DD.md
+
+## Key Rules
+- Date ALWAYS at the end after en dash (\u2013)
+- No interface suffix (\u2013 Claude Code, \u2013 Cursor = deprecated)
+- EN DASH (\u2013) only. Mac: Option + -
+- Max 80 characters total
+
+## Project Codes
+- {AIM} \u2014 AI Mindset team
+- {space} \u2014 community
+- {consulting} \u2014 consulting projects
+- {research} \u2014 research investigations
+- {strategy} \u2014 strategic documents
+- {channel} \u2014 content channel
+- {self} \u2014 personal notes
+- {POS} \u2014 Personal Operating System
+
+## Content Types
+
+### Core
+- {rule} \u2014 rules, standards
+- {guide} \u2014 instructions, how-to
+- {research} \u2014 research, investigation
+- {plan} \u2014 plan, roadmap
+- {prd} \u2014 product requirements
+- {skill} \u2014 agent skill definition
+
+### Meetings
+- {transcript} \u2014 call transcript
+- {meeting} \u2014 meeting notes
+- {summary} \u2014 summary, digest
+
+### Content
+- {article} \u2014 article, post
+- {demo} \u2014 demo script
+- {draft} \u2014 work in progress
+- {concept} \u2014 concept, idea
+
+### Business
+- {proposal} \u2014 proposal, offer
+- {brief} \u2014 creative/project brief
+- {memo} \u2014 internal memo
+- {review} \u2014 review, assessment
+- {report} \u2014 report, analysis
+- {pitch} \u2014 pitch, presentation
+
+### Rituals
+- {daily-focus} \u2014 daily focus
+- {weekly-sync} \u2014 weekly sync
+- {retro} \u2014 retrospective
+
+## Examples
+{AIM} {research} market analysis Q2 \u2013 2026-03-24.md
+{consulting} {proposal} AI integration pilot \u2013 2026-03-20.md
+{AIM} {rule} Communication Style \u2013 2026-01-15.md
+{self} {plan} goals Q2 2026 \u2013 2026-03-10.md
+{AIM} {memo} team restructuring \u2013 2026-03-15.md
+`;
+  const blob = new Blob([content], { type: 'text/markdown' });
+  const url = URL.createObjectURL(blob);
+  const a = document.createElement('a');
+  a.href = url;
+  a.download = 'naming-convention-cheatsheet.md';
+  document.body.appendChild(a);
+  a.click();
+  document.body.removeChild(a);
+  URL.revokeObjectURL(url);
+}
 </script>
 
 </body>
